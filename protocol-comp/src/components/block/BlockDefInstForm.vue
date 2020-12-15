@@ -1,0 +1,70 @@
+<template>
+<!-- new trial instance form modal -->
+<div class="modal fade" id="newBlockDefInstForm" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Block Definition</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Name">
+          </div>
+        </form>
+        <div v-if="!validName" class="alert alert-warning" role="alert">
+          Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
+        <button @click="newBlockDef" type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
+
+<script>
+export default {
+  computed: {
+    validName() {
+      return this.$store.state.validName
+    },
+    transfer() {
+      return this.$store.state.transfer
+    }
+  },
+  data() {
+    return {
+      name: ''
+    }
+  },
+  methods: {
+    checkNameValidity() {
+      this.$store.commit('CHECK_NAME', this.name)
+    },
+    newBlockDef() {
+        this.$store.commit('NEW_DEF', { name: this.name, ofClass: 'BlockDef'})
+        this.name = ''
+    },
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<style>
+
+</style>
