@@ -1,11 +1,11 @@
 <template>
   <div class="blockDefDropZone card shadow-sm">
-    <h5 class="sortable card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-primary">Parent-Block Definition</span> <button @click="deleteParBlockDef(def)" type="button" class="close">
+    <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-primary">Parent-Block Definition</span> <button @click="deleteParBlockDef(def)" type="button" class="close">
         <span class="text-light" aria-hidden="true">&times;</span>
       </button></h5>
     <div class="card-body">
       <div class="collapse" :id="def.name">
-        <draggable group="nested">
+        <draggable group="nested" :id="def.name">
           <draggable class="dragArea" :id="def.name" :list="def.items" group="blocks" @end="notify">
             <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
               <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
@@ -19,6 +19,7 @@
         </draggable>
       </div>
       <p class="card-text">
+        <button @mousedown="raiseException(def)" type="button" class="handle btn btn-light float-right ml-2">Drag</button>
         <button @click="open = false" v-if="open === true" class="btn btn-warning float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Hide</button>
         <button @click="open = true" v-if="open === false" class="btn btn-primary float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Edit</button>
         <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-secondary float-right">JSON</button>
@@ -53,6 +54,9 @@ export default {
     def: Object
   },
   methods: {
+    raiseException(def) {
+      this.$store.commit('TRANSFER_CHILD_EXCEPTION', def)
+    },
     notify() {
       this.$store.commit('MUTATED_ELEMENT', this.def)
       if (this.def.hasInstances === true) {
@@ -82,13 +86,5 @@ export default {
 </script>
 
 <style>
-.sortable {
-  cursor: move;
-}
-.sortable-drag {
-  opacity: 0;
-}
-.ghost {
-  border-left: 5px solid var(--info);
-}
+
 </style>

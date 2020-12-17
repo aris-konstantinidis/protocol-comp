@@ -14,6 +14,7 @@ export default new Vuex.Store({
     validName: true,
     activeDef: '',
     transfer: '',
+    transferChildException: null,
     blockDefs: [],
     parBlockDefs: [],
     dataToPreview: null,
@@ -64,6 +65,9 @@ export default new Vuex.Store({
     },
     TRANSFER(state, info) {
       state.transfer = info
+    },
+    TRANSFER_CHILD_EXCEPTION(state, def) {
+      state.transferChildException = def
     },
     SET_DATA_TO_PREVIEW(state, data) {
       state.dataToPreview = data
@@ -136,6 +140,13 @@ export default new Vuex.Store({
           const newParBlockInst = new ParBlock(item, origin)
           newParBlockInst.reference(parBlockDefinition.items)
           state.protocols[state.protocols.findIndex(proto => proto.name === target)].items.splice(index, 0, newParBlockInst)
+          break
+        case 'PRTPR': // parent-block-def to protocol
+          const prnt = state.parBlockDefs.find(par => par.name === origin)
+          prnt.hasInstances = true
+          const newParInstance = new ParBlock(item, origin)
+          newParInstance.reference(prnt.items)
+          state.parBlockDefs[state.parBlockDefs.findIndex(proto => proto.name === target)].items.splice(index, 0, newParInstance)
           break
       }
     }

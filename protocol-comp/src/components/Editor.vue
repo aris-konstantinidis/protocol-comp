@@ -2,7 +2,7 @@
   <div class="row p-0 m-0 w-100 h-100">
     <!-- fms templates -->
     <div class="col p-0 m-3">
-      <draggable :sort="false" class="dragArea" :list="fsms" :group="{ name: 'fsms', put: false, pull: 'clone'}" :clone="setChildTransfer" @end="setTransferInfo">
+      <draggable handle=".handle" :sort="false" class="dragArea" :list="fsms" :group="{ name: 'fsms', put: false, pull: 'clone'}" :clone="setChildTransfer" @end="setTransferInfo">
         <div class="mb-3" v-for="fsm in fsms" :key="fsm.name">
           <FsmTemplate :def="fsm" />
         </div>
@@ -12,19 +12,18 @@
     <!-- block definitions -->
     <div class="col p-0 m-3">
         <button ref="openTrialInstFormTrigger" style="display: none;" data-toggle="modal" data-target="#newTrialInstForm"></button>
-      <draggable :sort="false" class="dragArea" :list="blockDefs" :group="{ name: 'blocks', put: false, pull: 'clone'  }" :clone="setChildTransfer" @end="setTransferInfo">
+      <draggable handle=".handle" :sort="false" class="dragArea" :list="blockDefs" :group="{ name: 'blocks', put: false, pull: 'clone'  }" :clone="setChildTransfer" @end="setTransferInfo">
         <div class="mb-3" v-for="def in blockDefs" :key="def.name">
           <BlockDef :def="def"/>
         </div>
       </draggable>
     </div>
-
     <!-- parent-block definitions -->
     <div class="col p-0 m-3">
       <button type="button" ref="openBlockInstFormTrigger" style="display: none;" data-toggle="modal" data-target="#blockInstForm"></button>
-      <draggable :sort="false" class="dragArea" :list="parBlockDefs" :group="{ name: 'parBlocks', put: false, pull: 'clone' }" :clone="setChildTransfer" @end="setTransferInfo">
+      <draggable handle=".handle" :sort="false" class="dragArea" :group="{ name: 'parBlocks', put: false, pull: 'clone' }" :clone="setChildTransfer" @end="setTransferInfo">
         <div class="mb-3" v-for="def in parBlockDefs" :key="def.name">
-          <draggable :list="parBlockDefs" :group="{ name: 'nested', pull: 'clone', put: false }" :clone="setChildTransfer" @end="setTransferInfo">
+          <draggable handle=".handle" :list="parBlockDefs" :group="{ name: 'nested', pull: 'clone', put: false }" :clone="setChildTransfer" @end="setTransferInfo">
           <ParBlockDef :def="def" />
         </draggable>
         </div>
@@ -71,11 +70,13 @@ export default {
     },
     activeList() {
       return this.$store.state.activeList
+    },
+    transferChildException() {
+      return this.$store.state.transferChildException
     }
   },
   methods: {
     setChildTransfer(def) {
-      
       var dropzones, i
       if (def.constructor.name === 'Fsm') {
         dropzones = document.getElementsByClassName('fsmDropZone')
@@ -110,7 +111,7 @@ export default {
       this.$store.commit('SET_ACTIVE_LIST', group)
     },
     setTransferInfo(evt) {
-
+      if (this.transferChildException) this.selectedChild = this.transferChildException.name
       var dropzones
       dropzones = document.getElementsByClassName('fsmDropZone')
       for (i = 0; i < dropzones.length; i++) {
@@ -127,22 +128,28 @@ export default {
       this.$store.commit("TRANSFER", { child: this.selectedChild, parent: evt.to.id, index: evt.newIndex })
       for (var i in this.blockDefs) {
         if (evt.to.id === this.blockDefs[i].name) {
+            this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
             this.$refs['openTrialInstFormTrigger'].click()
         }
       }
       for (var j in this.parBlockDefs) {
         if (evt.to.id === this.parBlockDefs[j].name) {
+          if (this.transferChildException) {
+            this.$refs['openParBlockInstFormTrigger'].click()
+          } else {
+            this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
             this.$refs['openBlockInstFormTrigger'].click()
+          }
         }
       }
       for (var l in this.protocols) {
         if (evt.to.id === this.protocols[l].name) {
+          this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
           this.$store.commit('TARGET_PROTOCOL', true)
             if (this.activeList === "blocks") {
               this.$refs['openBlockInstFormTrigger'].click()
             } else if (this.activeList === "nested") {
               this.$refs['openParBlockInstFormTrigger'].click()
-
             }
         }
       }
@@ -152,10 +159,8 @@ export default {
 </script>
 
 <style scoped>
-.sortable {
-  cursor: move;
-}
 .sortable-drag {
   opacity: 100;
+
 }
 </style>

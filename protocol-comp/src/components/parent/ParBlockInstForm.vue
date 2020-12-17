@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
+        <button @click="removeException" type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
         <button @click="newParBlockInst()" type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Submit</button>
       </div>
     </div>
@@ -38,6 +38,9 @@ export default {
     },
     transfer() {
       return this.$store.state.transfer
+    },
+    transferChildException() {
+      return this.$store.state.transferChildException
     }
   },
   data() {
@@ -46,11 +49,20 @@ export default {
     }
   },
   methods: {
+    removeException() {
+      this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
+    },
     checkNameValidity() {
       this.$store.commit('CHECK_NAME', this.name)
     },
     newParBlockInst() {
-      this.$store.commit('ADD_ITEM', { action: 'PTPR', origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
+      if (this.transferChildException) {
+        this.$store.commit('ADD_ITEM', { action: 'PRTPR', origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
+      } else {
+        this.$store.commit('ADD_ITEM', { action: 'PTPR', origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
+
+      }
+      this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
       this.name = ''
     }
   }

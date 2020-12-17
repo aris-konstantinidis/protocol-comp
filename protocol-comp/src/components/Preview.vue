@@ -9,7 +9,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <JsonViewer :value="file" style="font-family:monospace"></JsonViewer>
+        <JsonViewer :value="file" style="font-family: monospace;"></JsonViewer>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Close</button>
