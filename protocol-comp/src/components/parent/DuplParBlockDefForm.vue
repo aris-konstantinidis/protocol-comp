@@ -3,7 +3,7 @@
 <div class="modal fade" id="duplicateParBlockDef" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header border-white">
         <h5 class="modal-title">Parent-Block Definition Duplication <span class="badge badge-primary">{{def.name}}</span> </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -19,7 +19,7 @@
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer border-white">
         <button type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
         <button @click="newParBlockDef" type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Submit</button>
       </div>

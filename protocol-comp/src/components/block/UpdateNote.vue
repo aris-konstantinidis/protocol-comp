@@ -1,7 +1,7 @@
 <template>
 <div class="modal fade" id="askUpdateBlockDefChildren" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content border-white">
       <div class="modal-header">
         <h5 class="modal-title">Auto-Update</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -15,7 +15,7 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer border-white">
         <button type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Okay</button>
       </div>
     </div>

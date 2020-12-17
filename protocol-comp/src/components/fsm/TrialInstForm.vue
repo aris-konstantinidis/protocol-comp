@@ -3,7 +3,7 @@
 <div class="modal fade" id="newTrialInstForm" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header border-white">
         <h5 class="modal-title">New Trial Instance</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -24,16 +24,15 @@
             <input v-model="blocking" value="false" type="checkbox" class="form-check-input">
             <label class="form-check-label">Blocking</label>
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label class="font-weight-bold">FSM Selection</label>
             <select class="form-control" v-model="fsm_tpl.id">
               <option v-for="fsm in fsms" :key="fsm.name">{{fsm.name}}</option>
             </select>
-          </div>
-          <!-- insert fsmVars and validate -->
-          <label class="font-weight-bold">Set Payload Variables</label>
+          </div> -->
+          <label class="font-weight-bold">Set Variables</label>
           <div v-for="fsmVar in fsmVars" :key="fsmVar.id">
-            <div class="form-group" v-if="fsmVar.fsm_tpl === fsm_tpl.id">
+            <div class="form-group" v-if="fsmVar.fsm_tpl === transfer.child">
 
               <!-- integrate monaco editor -->
 
@@ -42,7 +41,7 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer border-white">
         <button type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
         <button @click="newTrialInstance(def.name)" type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Submit</button>
         <button ref="openAskUpdateBlockDefChildren" style="display: none;" data-toggle="modal" data-target="#askUpdateBlockDefChildren"></button>
@@ -99,8 +98,9 @@ export default {
           }, obj)
     },
     newTrialInstance(name) {
+      this.fsm_tpl.id = this.transfer.child
       for (var fsmVar in this.fsmVars) {
-        if (this.fsm_tpl.id === this.fsmVars[fsmVar].fsm_tpl) {
+        if (this.transfer.child === this.fsmVars[fsmVar].fsm_tpl) {
           var payload = document.getElementById(this.fsmVars[fsmVar].id).value
           payload = JSON.parse(payload)
           for (var i = 0; i < this.fsmVars[fsmVar].vars.length; i++) {
@@ -128,9 +128,7 @@ export default {
         id: '',
         variables: []
       }
-      console.log(this.mutatedElement)
       if (this.mutatedElement.hasInstances) {
-        console.log('here')
         this.$refs['openAskUpdateBlockDefChildren'].click()
       }
     }

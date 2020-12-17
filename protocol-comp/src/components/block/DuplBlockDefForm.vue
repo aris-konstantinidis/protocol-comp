@@ -2,7 +2,7 @@
 <!-- new trial instance form modal -->
 <div class="modal fade" id="duplBlockDef" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+    <div class="modal-content border-white">
       <div class="modal-header">
         <h5 class="modal-title">Block Definition Duplication <span class="badge badge-primary">{{def.name}}</span> </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -19,7 +19,7 @@
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer border-white">
         <button type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
         <button @click="newBlockDef" type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Submit</button>
       </div>
