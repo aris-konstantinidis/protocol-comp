@@ -37,7 +37,7 @@
 
               <!-- integrate monaco editor -->
 
-              <textarea :id="fsmVar.id" rows='9' class="form-control bg-light text-dark border-light" style="font-family:mono;" :value="JSON.stringify(fsmVar.payload, undefined, 2)"></textarea>
+              <textarea :id="fsmVar.id" rows='9' class="form-control bg-dark text-light border-light" style="font-family:mono;" :value="JSON.stringify(fsmVar.payload, undefined, 2)"></textarea>
             </div>
           </div>
         </form>
@@ -57,6 +57,9 @@
 import { Trial, Variable } from '../../definitions.js'
 export default {
   computed: {
+    mutatedElement() {
+      return this.$store.state.mutatedElement
+    },
     validName() {
       return this.$store.state.validName
     },
@@ -110,7 +113,7 @@ export default {
           }
         }
       }
-      this.$store.commit("MUTATED_ELEMENT", { name: this.transfer.parent, ofClass: '' })
+      this.$store.commit("MUTATED_ELEMENT", { name: this.transfer.parent, ofClass: 'BlockDef' })
       this.$store.commit('ADD_ITEM', {
         action: "TTB",
         origin: this.transfer.child,
@@ -125,7 +128,9 @@ export default {
         id: '',
         variables: []
       }
-      if (this.def.hasInstances) {
+      console.log(this.mutatedElement)
+      if (this.mutatedElement.hasInstances) {
+        console.log('here')
         this.$refs['openAskUpdateBlockDefChildren'].click()
       }
     }

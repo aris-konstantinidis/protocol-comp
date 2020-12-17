@@ -5,7 +5,7 @@
       </button></h5>
     <div class="card-body">
       <div class="collapse" :id="def.name">
-        <draggable v-model="def.items" ghost-class="ghost">
+        <draggable group="nested">
           <draggable class="dragArea" :id="def.name" :list="def.items" group="blocks" @end="notify">
             <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
               <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">

@@ -24,7 +24,9 @@
       <button type="button" ref="openBlockInstFormTrigger" style="display: none;" data-toggle="modal" data-target="#blockInstForm"></button>
       <draggable :sort="false" class="dragArea" :list="parBlockDefs" :group="{ name: 'parBlocks', put: false, pull: 'clone' }" :clone="setChildTransfer" @end="setTransferInfo">
         <div class="mb-3" v-for="def in parBlockDefs" :key="def.name">
+          <draggable :list="parBlockDefs" :group="{ name: 'nested', pull: 'clone', put: false }" :clone="setChildTransfer" @end="setTransferInfo">
           <ParBlockDef :def="def" />
+        </draggable>
         </div>
       </draggable>
     </div>
@@ -73,6 +75,7 @@ export default {
   },
   methods: {
     setChildTransfer(def) {
+      
       var dropzones, i
       if (def.constructor.name === 'Fsm') {
         dropzones = document.getElementsByClassName('fsmDropZone')
@@ -96,17 +99,18 @@ export default {
           dropzones[i].classList.add('alert-primary')
         }
       }
+
       this.$store.commit('TARGET_PROTOCOL', false)
       this.selectedChild = def.name
       // change the protocol's accepted group parameter
-      var group = 'parBlocks'
+      var group = 'nested'
       if (def.constructor.name === "BlockDef") {
         group = 'blocks'
       }
       this.$store.commit('SET_ACTIVE_LIST', group)
     },
     setTransferInfo(evt) {
-      console.log()
+
       var dropzones
       dropzones = document.getElementsByClassName('fsmDropZone')
       for (i = 0; i < dropzones.length; i++) {
@@ -136,7 +140,7 @@ export default {
           this.$store.commit('TARGET_PROTOCOL', true)
             if (this.activeList === "blocks") {
               this.$refs['openBlockInstFormTrigger'].click()
-            } else if (this.activeList === "parBlocks") {
+            } else if (this.activeList === "nested") {
               this.$refs['openParBlockInstFormTrigger'].click()
 
             }
@@ -153,8 +157,5 @@ export default {
 }
 .sortable-drag {
   opacity: 100;
-  background: black;
 }
-.ghost {
-  border-left: 5px solid var(--info);
-}</style>
+</style>

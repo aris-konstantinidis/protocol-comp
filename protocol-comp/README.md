@@ -5,7 +5,7 @@ To test locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Inst
 - in **dev-server** -->`node server.js`
 - in **protocol-component** --> `npm run serve`.
 
-## Working Features
+## Features
 1. [x] `auto-load` protocols.json and fsms.json
 2. [x] `create` new block-definitions and parent-block-definition
 3. [x] `remove` block-definitions and parent-block-definitions
@@ -37,7 +37,7 @@ To test locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Inst
 - export `subjects.json` when configuration is finished
 
 ## Ideas
-- using the browser's `localStorage` and auto-save the state of a configuration to increase safety
-- implement a small `JSON-Variable-Schema to Html-Input-Form` converted. This way, validation could be checked through the input-form. For example:
+- using the browser's `localStorage` to auto-save the state of a configuration in case a tab closes or the browser crashes
+- implement a small `JSON-Variable-Schema to Html-Input-Form` converter. This way, validation could be checked through the input-form. For example:
     - a `enum` variable with the values `CrossBlack` and `CrossRed` would be converted into a html `select`(type) input-tag with exactly these two options.
     - a `time` variable with properties `sec` and `nsec` would be transformed into two html `number`(type) input-tags.
