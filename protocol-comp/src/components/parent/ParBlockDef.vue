@@ -6,11 +6,11 @@
     <div class="card-body">
       <div class="collapse" :id="def.name">
         <draggable group="nested" :id="def.name">
-          <draggable class="dragArea" :id="def.name" :list="def.items" group="blocks" @end="notify">
+          <draggable class="dragArea" :id="def.name" :list="def.items" :group="activeList" @end="notify">
             <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
               <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
                 <strong class="font-weight-bold">{{item.name}} <span class="badge badge-dark">Block Instance</span> <span class="badge badge-success">{{item.ref}}</span></strong>
-                <button @click='deleteBlockInst(index, item.name)' type="button" class="close" aria-label="Close">
+                <button @click='deleteBlockInst(index)' type="button" class="close" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -42,6 +42,11 @@ import DuplParBlockDefForm from './DuplParBlockDefForm'
 import ParBlockInstForm from './ParBlockInstForm'
 import draggable from 'vuedraggable'
 export default {
+  computed: {
+    activeList() {
+      return this.$store.state.activeList
+    }
+  },
   data() {
     return {
       open: false
@@ -78,7 +83,7 @@ export default {
       }
     },
     deleteBlockInst(index) {
-      this.$store.commit('DELETE_ITEM', { item: index, name: name, parent: this.def.name, ofClass: this.def.constructor.name })
+      this.$store.commit('DELETE_ITEM', { index: index, parent: this.def.name, ofClass: this.def.constructor.name })
       this.notify()
     }
   }

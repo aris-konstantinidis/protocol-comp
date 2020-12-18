@@ -24,12 +24,6 @@
             <input v-model="blocking" value="false" type="checkbox" class="form-check-input">
             <label class="form-check-label">Blocking</label>
           </div>
-          <!-- <div class="form-group">
-            <label class="font-weight-bold">FSM Selection</label>
-            <select class="form-control" v-model="fsm_tpl.id">
-              <option v-for="fsm in fsms" :key="fsm.name">{{fsm.name}}</option>
-            </select>
-          </div> -->
           <label class="font-weight-bold">Set Variables</label>
           <div v-for="fsmVar in fsmVars" :key="fsmVar.id">
             <div class="form-group" v-if="fsmVar.fsm_tpl === transfer.child">

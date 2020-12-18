@@ -73,6 +73,7 @@ class Trial {
         this.description = description
         this.blocking = blocking
         this.fsm_tpl = fsm_tpl
+        this.labels = []
     }
 }
 

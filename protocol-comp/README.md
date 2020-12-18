@@ -38,3 +38,5 @@ To test locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Inst
 
 ## Ideas
 - use `localStorage` to auto-save the state of a configuration in case a tab closes, the browser crashes or a [Bootstrap](https://getbootstrap.com/docs/5.0/components/modal/) modal freezes.
+
+## Bugs

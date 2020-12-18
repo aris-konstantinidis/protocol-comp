@@ -3,7 +3,7 @@
     <div class="dropdown">
       <button type="button" data-toggle="modal" data-target="#newBlockDefInstForm" class="btn btn-success mr-2">New BlockDef</button>
       <button type="button" data-toggle="modal" data-target="#newParBlockDefInstForm" class="btn btn-success mr-5">New ParBlockDef</button>
-      <span class="text-light"> Catched exception: <span v-if="transferChildException"  class="badge badge-light">{{transferChildException.name}}</span></span>
+      <span v-if="transfer.parent" class="text-light"><span class='font-weight-bold'>DATA TRANSFER:</span>  from <span class="badge badge-light">{{transfer.child}}</span> to <span class="badge badge-light">{{transfer.parent}}</span> at index <span class="badge badge-light">{{transfer.index}}</span></span>
 </div>
 <BlockDefInstForm />
 <ParBlockDefInstForm />
@@ -18,8 +18,8 @@ export default {
     BlockDefInstForm, ParBlockDefInstForm
   },
   computed: {
-    transferChildException() {
-      return this.$store.state.transferChildException
+    transfer() {
+      return this.$store.state.transfer
     }
   }
 }

@@ -10,7 +10,7 @@
             <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
               <div class="alert alert-info shadow-sm alert-dismissible fade show" role="alert">
                 <strong class="font-weight-bold">{{item.name}} <span class="badge badge-dark">Trial Instance</span> <span class="badge badge-info">{{item.fsm_tpl.id}}</span></strong>
-                <button @click='deleteTrialInst(index, item.name)' :key='item.name' type="button" class="close" aria-label="Close">
+                <button @click='deleteTrialInst(index)' :key='item.name' type="button" class="close" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -77,8 +77,8 @@ export default {
         this.$store.commit('DELETE_DEF', { name: this.def.name, ofClass: this.def.constructor.name })
       }
     },
-    deleteTrialInst(index, name) {
-      this.$store.commit('DELETE_ITEM', { item: index, name: name, parent: this.def.name, ofClass: this.def.constructor.name })
+    deleteTrialInst(index) {
+      this.$store.commit('DELETE_ITEM', { index: index, parent: this.def.name, ofClass: this.def.constructor.name })
       this.notify()
     }
   }

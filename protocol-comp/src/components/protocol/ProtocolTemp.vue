@@ -13,7 +13,7 @@
             </div>
           </draggable>
       <p class="card-text">
-        <button @click="exportJSON" class="btn btn-dark float-right ml-2" type="button">Flatten</button>
+        <button @click="flatten" class="btn btn-dark float-right ml-2" type="button">Export</button>
         <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-secondary float-right">JSON</button>
       </p>
   </div>
@@ -40,8 +40,17 @@ export default {
     def: Object
   },
   methods: {
-    exportJSON() {
-      console.log('add labels, flatten JSON and remove helper props')
+    flatten() {
+      var exportProtocol = []
+
+
+      function extract(object) {
+        object.forEach((item, i) => {
+
+        });
+
+      }
+
     },
     preview() {
       this.$store.commit('SET_DATA_TO_PREVIEW', this.def)

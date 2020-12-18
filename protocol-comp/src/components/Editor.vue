@@ -37,10 +37,12 @@
           <ProtocolTemp :def="def" />
         </div>
     </div>
+    <TrialInstForm />
   </div>
 </template>
 
 <script>
+import TrialInstForm from './fsm/TrialInstForm'
 import draggable from "vuedraggable";
 import FsmTemplate from './fsm/FsmTemplate'
 import BlockDef from './block/BlockDef'
@@ -53,7 +55,7 @@ export default {
     }
   },
   components: {
-    draggable, BlockDef, FsmTemplate, ParBlockDef, ProtocolTemp
+    draggable, BlockDef, FsmTemplate, ParBlockDef, ProtocolTemp, TrialInstForm
   },
   computed: {
     protocols() {
@@ -77,7 +79,6 @@ export default {
   },
   methods: {
     setChildTransfer(def) {
-      console.log(def.name)
       var dropzones, i
       if (def.constructor.name === 'Fsm') {
         dropzones = document.getElementsByClassName('fsmDropZone')
@@ -112,7 +113,6 @@ export default {
       this.$store.commit('SET_ACTIVE_LIST', group)
     },
     setTransferInfo(evt) {
-      console.log(evt.to.id, evt.newIndex)
       if (this.transferChildException) this.selectedChild = this.transferChildException.name
       var dropzones
       dropzones = document.getElementsByClassName('fsmDropZone')

@@ -46,7 +46,6 @@ export default new Vuex.Store({
       })
       function remove(list, parent) {
         list.forEach((item, i) => {
-
           parent === item.ref ? list.splice(i, 1) : item.items ? remove(item.items, parent) : false
         })
       }
@@ -100,6 +99,7 @@ export default new Vuex.Store({
       state.names.splice(state.names.findIndex(n => n === name), 1)
     },
     DELETE_ITEM(state, { index, parent, ofClass }) {
+      console.log(index, parent, ofClass)
       if (ofClass === 'BlockDef') {
         const blockDef = state.blockDefs.findIndex(block => block.name === parent)
         state.blockDefs[blockDef].items.splice(index, 1)

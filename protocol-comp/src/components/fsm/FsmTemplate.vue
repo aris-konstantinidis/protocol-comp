@@ -17,16 +17,11 @@
       <button @click="preview" data-target="#previewModal" data-toggle="modal" class="btn btn-secondary float-right">JSON</button>
     </p>
   </div>
-  <TrialInstForm />
 </div>
 </template>
 
 <script>
-import TrialInstForm from './TrialInstForm'
 export default {
-  components: {
-    TrialInstForm
-  },
   data() {
     return {
       open: false
