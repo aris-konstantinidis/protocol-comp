@@ -44,3 +44,4 @@ To test locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Inst
 
 ## Bugs
 - not all elements are draggable after state retrieval from `localStorage`
+- labeling is wrong when nesting parent in parent - seem like labels of last protocol override all previous
