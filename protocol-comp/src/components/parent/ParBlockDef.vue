@@ -1,6 +1,6 @@
 <template>
   <div class="blockDefDropZone card shadow-sm">
-    <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-primary">Parent-Block Definition</span> <button @click="deleteParBlockDef(def)" type="button" class="close">
+    <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-primary">Parent-Block Definition</span> <span v-if="def.hasInstances" class='badge badge-light'>has instances</span> <button @click="deleteParBlockDef(def)" type="button" class="close">
         <span class="text-light" aria-hidden="true">&times;</span>
       </button></h5>
     <div class="card-body">
@@ -10,7 +10,7 @@
             <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
               <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
                 <strong class="font-weight-bold">{{item.name}} <span class="badge badge-dark">Block Instance</span> <span class="badge badge-success">{{item.ref}}</span></strong>
-                <button @click='deleteBlockInst(index)' type="button" class="close" aria-label="Close">
+                <button @click='deleteItem(index)' type="button" class="close" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -82,7 +82,7 @@ export default {
         this.$store.commit("DELETE_DEF", { name: this.def.name, ofClass: this.def.constructor.name })
       }
     },
-    deleteBlockInst(index) {
+    deleteItem(index) {
       this.$store.commit('DELETE_ITEM', { index: index, parent: this.def.name, ofClass: this.def.constructor.name })
       this.notify()
     }

@@ -22,6 +22,7 @@ export default {
   created() {
     this.$store.dispatch('GET_FSMS')
     this.$store.dispatch("GET_PROTOCOLS")
+    this.$store.commit("RETRIEVE_STATE")
   }
 }
 </script>

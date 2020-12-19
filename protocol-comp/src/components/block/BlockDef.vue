@@ -1,6 +1,6 @@
 <template>
   <div class="fsmDropZone card shadow-sm">
-    <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-success">Block Definition</span> <button @click="deleteBlockDef(def)" type="button" class="close">
+    <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-success">Block Definition</span> <span v-if="def.hasInstances" class='badge badge-light'>has instances</span> <button @click="deleteBlockDef(def)" type="button" class="close">
         <span class="text-light" aria-hidden="true">&times;</span>
       </button></h5>
     <div class="card-body">

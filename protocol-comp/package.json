@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "core-js": "^3.7.0",
+    "jsonschema": "^1.4.0",
     "vue": "^2.6.11",
     "vue-json-viewer": "^2.2.16",
     "vuedraggable": "^2.24.3",

@@ -1,7 +1,21 @@
 import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
+import Vuex, {
+  Store
+} from 'vuex'
 import axios from 'axios'
-import { BlockDef, Fsm, Var, FsmVars, ParBlockDef, Block, Protocol, ParBlock } from '../definitions'
+var validate = require('jsonschema').validate
+import subjectsSchema from '../jsonSchemas/subjects.schema.json'
+import {
+  BlockDef,
+  Fsm,
+  Var,
+  FsmVars,
+  ParBlockDef,
+  Block,
+  Protocol,
+  ParBlock,
+  Subject
+} from '../definitions'
 
 Vue.use(Vuex)
 
@@ -21,8 +35,72 @@ export default new Vuex.Store({
     activeList: 'parBlocks',
     targetProtocol: false,
     mutatedElement: null,
+    subjectsJSON: '',
+    subjectsJsonValid: null,
   },
   mutations: {
+    SAVE_STATE(state) {
+      localStorage.setItem('names', JSON.stringify(state.names))
+      localStorage.setItem('blockDefs', JSON.stringify(state.blockDefs))
+      localStorage.setItem('parBlockDefs', JSON.stringify(state.parBlockDefs))
+    },
+    RETRIEVE_STATE(state) {
+      if (localStorage.getItem('names')) state.names = JSON.parse(localStorage.getItem('names'))
+      if (localStorage.getItem('names')) state.blockDefs = JSON.parse(localStorage.getItem('blockDefs'))
+      if (localStorage.getItem('names')) state.parBlockDefs = JSON.parse(localStorage.getItem('parBlockDefs'))
+    },
+    EMPTY(state) {
+      state.names = []
+      state.transfer = ''
+      state.transferChildException = null
+      state.blockDefs = []
+      state.parBlockDefs = []
+    },
+    EXPORT_CONFIGURATION(state) {
+      for (var protocol in state.protocols) {
+        var flatProtocol = generateExport(state.protocols[protocol])
+        for (var subject in state.protocols[protocol].subjects) {
+          // create key protocol
+          state.protocols[protocol].subjects[subject]["protocol"] = {}
+          // create nested key 'id'
+          state.protocols[protocol].subjects[subject].protocol["id"] = state.protocols[protocol].id
+          // create nested key 'name'
+          state.protocols[protocol].subjects[subject].protocol["name"] = state.protocols[protocol].name
+          // create nested key 'trials' and assign it the flattened protocol configuration
+          state.protocols[protocol].subjects[subject].protocol["trials"] = flatProtocol
+        }
+      }
+      // generate subjects.json
+      var subjectsJSON = { "subjects": [] }
+      for (protocol in state.protocols) {
+        for (subject in state.protocols[protocol].subjects) {
+          subjectsJSON.subjects.push(state.protocols[protocol].subjects[subject])
+        }
+      }
+      state.subjectsJSON = subjectsJSON
+      state.dataToPreview = subjectsJSON
+      state.subjectsJsonValid = validate(subjectsJSON, subjectsSchema)
+      function generateExport(object) {
+        var product = []
+        function extract(object, nameArray) {
+          nameArray = nameArray || [];
+          if (object.items) {
+            nameArray.push(object.name)
+            for (var i = 0; i < object.items.length; i++) {
+              extract(object.items[i], nameArray)
+            }
+            nameArray.pop();
+            return
+          }
+          nameArray.push(object.name)
+          object.labels = JSON.parse(JSON.stringify(nameArray))
+          product.push(object)
+          nameArray.pop();
+        }
+        extract(object)
+        return product
+      }
+    },
     SET_FSMS(state, fsm) {
       state.fsms.push(fsm)
       state.names.push(fsm.name)
@@ -44,6 +122,7 @@ export default new Vuex.Store({
       state.protocols.forEach((protocol) => {
         remove(protocol.items, parent)
       })
+
       function remove(list, parent) {
         list.forEach((item, i) => {
           parent === item.ref ? list.splice(i, 1) : item.items ? remove(item.items, parent) : false
@@ -57,7 +136,7 @@ export default new Vuex.Store({
       state.targetProtocol = status
     },
     SET_ACTIVE_LIST(state, list) {
-       state.activeList = list
+      state.activeList = list
     },
     SET_ACTIVE_DEF(state, def) {
       state.activeDef = def
@@ -71,11 +150,18 @@ export default new Vuex.Store({
     SET_DATA_TO_PREVIEW(state, data) {
       state.dataToPreview = data
     },
-    NEW_DEF(state, { name, ofClass }) {
+    NEW_DEF(state, {
+      name,
+      ofClass
+    }) {
       ofClass === "BlockDef" ? state.blockDefs.push(new BlockDef(name)) : state.parBlockDefs.push(new ParBlockDef(name))
       state.names.push(name)
     },
-    DUPL_DEF(state, { name, items, ofClass }) {
+    DUPL_DEF(state, {
+      name,
+      items,
+      ofClass
+    }) {
       var copy;
       if (ofClass === 'BlockDef') {
         copy = new BlockDef(name)
@@ -90,7 +176,10 @@ export default new Vuex.Store({
       }
       state.names.push(name)
     },
-    DELETE_DEF(state, { name, ofClass }) {
+    DELETE_DEF(state, {
+      name,
+      ofClass
+    }) {
       if (ofClass === "BlockDef") {
         state.blockDefs.splice(state.blockDefs.findIndex(def => def.name === name), 1)
       } else if (ofClass === "ParBlockDef") {
@@ -98,8 +187,11 @@ export default new Vuex.Store({
       }
       state.names.splice(state.names.findIndex(n => n === name), 1)
     },
-    DELETE_ITEM(state, { index, parent, ofClass }) {
-      console.log(index, parent, ofClass)
+    DELETE_ITEM(state, {
+      index,
+      parent,
+      ofClass
+    }) {
       if (ofClass === 'BlockDef') {
         const blockDef = state.blockDefs.findIndex(block => block.name === parent)
         state.blockDefs[blockDef].items.splice(index, 1)
@@ -115,7 +207,13 @@ export default new Vuex.Store({
       }
 
     },
-    ADD_ITEM(state, { action, origin, target, item, index }) {
+    ADD_ITEM(state, {
+      action,
+      origin,
+      target,
+      item,
+      index
+    }) {
       switch (action) {
         case 'TTB': // trial to blockdef
           state.blockDefs[state.blockDefs.findIndex(bl => bl.name === target)].items.splice(index, 0, item)
@@ -152,7 +250,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    GET_FSMS({commit}) {
+    GET_FSMS({
+      commit
+    }) {
       axios.get('fsms').then((res) => {
         const fsms = res.data.fsms
         for (var fsm in fsms) {
@@ -162,7 +262,9 @@ export default new Vuex.Store({
                 if (fsms[fsm].transitions[transition].events[event].new.variables) {
                   var newFsmVars = new FsmVars(fsm, fsms[fsm].transitions[transition].events[event].new.payload)
                   for (var variable in fsms[fsm].transitions[transition].events[event].new.variables) {
-                    const { path } = fsms[fsm].transitions[transition].events[event].new.variables[variable]
+                    const {
+                      path
+                    } = fsms[fsm].transitions[transition].events[event].new.variables[variable]
                     var newVar = new Var(fsm, transition, event, variable, path)
                     newFsmVars.vars.push(newVar)
                   }
@@ -175,7 +277,10 @@ export default new Vuex.Store({
         }
       })
     },
-    GET_PROTOCOLS({state, commit}) {
+    GET_PROTOCOLS({
+      state,
+      commit
+    }) {
       axios.get('protocols').then((res) => {
         const protocols = res.data.protocols
         for (var protocol in protocols) {

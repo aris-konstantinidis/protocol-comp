@@ -1,16 +1,29 @@
 {
-  "protocols": 
+  "protocols":
 	[
 		{
-     	 "id": "1",
+     	 "id": 1,
       "name": "Protocol Part 1",
       "subjects": [{
           "id": 1,
           "code": "4ef8a9"
         },
         {
-          "id": "5bn8h6",
-          "code": "s2"
+          "id": 2,
+          "code": "5bn8h6"
+        }
+      ]
+    },
+    {
+     	 "id": 2,
+      "name": "Protocol Part 2",
+      "subjects": [{
+          "id": 1,
+          "code": "asd24"
+        },
+        {
+          "id": 2,
+          "code": "2345w"
         }
       ]
     }

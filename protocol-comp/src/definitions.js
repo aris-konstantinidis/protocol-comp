@@ -29,6 +29,13 @@ class ParBlockDef {
   }
 }
 
+class Subject {
+  constructor() {
+    this.id = id
+    this.code = code
+    this.protocol = protocol // contains trials
+  }
+}
 
 class Protocol {
   constructor(id, name, subjects) {
@@ -68,12 +75,20 @@ class ParBlock {
 
 
 class Trial {
+  static id = 1
     constructor(name, description, blocking, fsm_tpl) {
+        this.id = Trial.id
+        Trial.id++
         this.name = name
         this.description = description
         this.blocking = blocking
         this.fsm_tpl = fsm_tpl
         this.labels = []
+    }
+    setLabels(labels) {
+      for (var label in labels) {
+        this.labels.push(labels[label])
+      }
     }
 }
 
@@ -98,8 +113,8 @@ class Var {
     constructor(fsm, transition, event_idx, variable_idx, path) {
         this.fsm_tpl = fsm
         this.transition = transition
-        this.event_idx = event_idx
-        this.variable_idx = variable_idx
+        this.event_idx = parseInt(event_idx)
+        this.variable_idx = parseInt(variable_idx)
         this.path = path
         this.value = null // populated on user-input
     }
@@ -107,11 +122,11 @@ class Var {
 class Variable { // end product assigned to trial
   constructor(transition, event_idx, variable_idx, value) {
     this.transition = transition
-    this.event_idx = event_idx
-    this.variable_idx = variable_idx
+    this.event_idx = parseInt(event_idx)
+    this.variable_idx = parseInt(variable_idx)
     this.value = value
   }
 }
 
 
-export { BlockDef, Trial, Fsm, FsmVars, Var, Variable, ParBlockDef, Block, Protocol, ParBlock }
+export { BlockDef, Trial, Fsm, FsmVars, Var, Variable, ParBlockDef, Block, Protocol, ParBlock, Subject }

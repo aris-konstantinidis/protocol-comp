@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft/2019-09/schema#",
+    "type": "object",
+    "required": ["subjects"],
+    "properties": {
+        "subjects": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["id", "code", "protocol"],
+                "properties": {
+                    "id": { "type": "number" },
+                    "code": { "type": "string" },
+                    "name": { "type": "string" },
+                    "protocol": {
+                        "type": "object",
+                        "required": ["id", "trials"],
+                        "properties": {
+                            "id": { "type": "number" },
+                            "name": { "type": "string" },
+                            "trials": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "required": ["id", "name", "labels"],
+                                    "properties": {
+                                        "id": { "type": "number" },
+                                        "name": { "type": "string" },
+                                        "blocking": { "type": "boolean" },
+                                        "labels": {
+                                            "type": "array",
+                                            "items": { "type": "string" }
+                                        },
+                                        "fsm_tpl": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": { "type": "string" },
+                                                "variables": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "required": ["transition", "event_idx", "variable_idx"],
+                                                        "properties": {
+                                                            "transition": {
+                                                                "type": "string",
+                                                                "description": "The name of the transition which holds the variable."
+                                                            },
+                                                            "event_idx": {
+                                                                "type": "number",
+                                                                "description": "The index of the event within a transition which holds the variable."
+                                                            },
+                                                            "variable_idx": {
+                                                                "type": "number",
+                                                                "description": "The index of the variable within an event which holds the variable."
+                                                            },
+                                                            "value": {
+                                                                "description": "The value of the variable for this trial instance."
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

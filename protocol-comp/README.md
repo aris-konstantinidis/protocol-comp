@@ -28,15 +28,19 @@ To test locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Inst
 - `prevent` self assignments
 - `mark` valid drop zones while dragging elements
 - `inspect` underlying JSON structure of definitions/templates
+- `auto-label` and `flatten` exports as specified in `subjects.schema.json`
+- `export` `subjects.json` when configuration is finished
+- `save` or `clear` current configuration state to/from localStorage (helps while testing)
+- `validation` and `visual feedback` of the generated output (subjects.json against subjects.schema.json)
+
 
 ## Under Construction
-- the mutation of a definition does not yet prompt the user to `choose` between changing the definition and all its instances or creating a new definition with these mutations.
+- the mutation of a definition does not yet prompt the user to `choose` between changing the definition and all its instances or creating a new definition with these mutations
+  - for now, the user is just notified that the mutation has affected all instances
 - integration of `monaco-editor` for schema-validation and auto-suggestions
-- auto-label and flatten exports as specified in `subjects.schema.json`
+  - a provisional textarea is used
 - set default `blocking` state to `true` if item is the last one in a block
-- export `subjects.json` when configuration is finished
-
-## Ideas
-- use `localStorage` to auto-save the state of a configuration in case a tab closes, the browser crashes or a [Bootstrap](https://getbootstrap.com/docs/5.0/components/modal/) modal freezes.
+  - in which state should this be checked? On export? Trials inside a block-instance can be changed, which could result in a new last element.
 
 ## Bugs
+- not all elements are draggable after state retrieval from `localStorage`
