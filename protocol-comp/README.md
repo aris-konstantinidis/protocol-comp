@@ -1,7 +1,11 @@
 # Protocol Component
 
-## Setup
-To test locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Install **dependencies** separately for the **dev-server** and the **protocol-comp** front. The dev-server is used to provide dummy endpoints for `fsms.json` and `protocols.json`. Run in development mode with:
+## Testing
+Click [here](http://207.154.210.124:8080/) to test online.
+> Please note that there is a **major bug** in the labeling process which is not yet solved. Labeling is done automatically when the `export` button is pressed.
+
+
+To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Install **dependencies** separately for the **dev-server** and the **protocol-comp** front. The dev-server is used to provide dummy endpoints for `fsms.json` and `protocols.json`. Run in development mode with:
 - `node server.js` in *./dev-server*
 - `npm run serve` in *./protocol-comp*
 
@@ -43,5 +47,5 @@ To test locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Inst
   - in which state should this be checked? On export? Trials inside a block-instance can be changed, which could result in a new last element.
 
 ## Bugs
+- labeling is wrong - the last calculated labels override all the previous
 - not all elements are draggable after state retrieval from `localStorage`
-- labeling is wrong when nesting parent in parent - seem like labels of last protocol override all previous
