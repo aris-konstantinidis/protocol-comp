@@ -63,9 +63,9 @@ export default new Vuex.Store({
           // create key protocol
           state.protocols[protocol].subjects[subject]["protocol"] = {}
           // create nested key 'id'
-          state.protocols[protocol].subjects[subject].protocol["id"] = state.protocols[protocol].id
+          state.protocols[protocol].subjects[subject].protocol["id"] = Number(JSON.stringify(JSON.parse(state.protocols[protocol].id)))
           // create nested key 'name'
-          state.protocols[protocol].subjects[subject].protocol["name"] = state.protocols[protocol].name
+          state.protocols[protocol].subjects[subject].protocol["name"] = JSON.stringify(state.protocols[protocol].name)
           // create nested key 'trials' and assign it the flattened protocol configuration
           state.protocols[protocol].subjects[subject].protocol["trials"] = flatProtocol
         }
@@ -74,13 +74,14 @@ export default new Vuex.Store({
       var subjectsJSON = { "subjects": [] }
       for (protocol in state.protocols) {
         for (subject in state.protocols[protocol].subjects) {
-          subjectsJSON.subjects.push(state.protocols[protocol].subjects[subject])
+          subjectsJSON.subjects.push(JSON.parse(JSON.stringify(state.protocols[protocol].subjects[subject])))
         }
       }
       state.subjectsJSON = subjectsJSON
       state.dataToPreview = subjectsJSON
       state.subjectsJsonValid = validate(subjectsJSON, subjectsSchema)
       function generateExport(object) {
+        object = JSON.parse(JSON.stringify(object))
         var product = []
         function extract(object, nameArray) {
           nameArray = nameArray || [];
@@ -92,7 +93,7 @@ export default new Vuex.Store({
             nameArray.pop();
             return
           }
-          nameArray.push(object.name)
+          nameArray.push(JSON.parse(JSON.stringify(object.name)))
           object.labels = JSON.parse(JSON.stringify(nameArray))
           product.push(object)
           nameArray.pop();

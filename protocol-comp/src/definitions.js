@@ -39,7 +39,7 @@ class Subject {
 
 class Protocol {
   constructor(id, name, subjects) {
-    this.id = id
+    this.id = Number(id)
     this.name = name
     this.subjects = subjects
     this.items = []
