@@ -1,7 +1,7 @@
 # Protocol Component
 
 ## Testing
-Click [here](http://207.154.210.124:8080/) to test online.
+Click [here](http://207.154.210.124:8080/) to test online (currently unavailable)
 
 To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Install **dependencies** separately for the **dev-server** and the **protocol-comp** front. The dev-server is used to provide dummy endpoints for `fsms.json` and `protocols.json`. Run in development mode with:
 - `node server.js` in *./dev-server*
