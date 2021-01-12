@@ -128,6 +128,9 @@ export default {
         dropzones[i].classList.remove('alert-primary')
       }
       this.$store.commit("TRANSFER", { child: this.selectedChild, parent: evt.to.id, index: evt.newIndex })
+      this.$store.commit("RESET_ACTIVE_VARIABLES")
+      this.$root.$emit("forceRerender")
+      // trigger active variables update
       for (var i in this.blockDefs) {
         if (evt.to.id === this.blockDefs[i].name) {
             this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)

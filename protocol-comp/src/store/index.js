@@ -37,8 +37,23 @@ export default new Vuex.Store({
     mutatedElement: null,
     subjectsJSON: '',
     subjectsJsonValid: null,
+    activeVariables: [],
+    logger: { transfers: [], errors: [] }
   },
   mutations: {
+    LOG_ERROR(state, error) {
+      state.logger.errors.push(error)
+    },
+    RESET_ACTIVE_VARIABLES(state) {
+      state.activeVariables = []
+      for (var i = 0; i < state.fsmVars.length; i++) {
+        state.activeVariables.push({ id: JSON.parse(JSON.stringify(state.fsmVars[i].id)), payload: JSON.parse(JSON.stringify(state.fsmVars[i].payload)) })
+      }
+    },
+    UPDATE_ACTIVE_VARIABLES(state, { payload, id }) {
+      var index = state.activeVariables.findIndex(variable => variable.id == parseInt(id))
+      state.activeVariables[index].payload = payload
+    },
     SAVE_STATE(state) {
       localStorage.setItem('names', JSON.stringify(state.names))
       localStorage.setItem('blockDefs', JSON.stringify(state.blockDefs))
@@ -112,6 +127,7 @@ export default new Vuex.Store({
     },
     SET_FSM_VARIABLES(state, payload) {
       state.fsmVars.push(payload)
+      state.activeVariables.push({id: payload.id, payload: payload.payload})
     },
     CHECK_NAME(state, name) {
       state.names.includes(name) ? state.validName = false : state.validName = true

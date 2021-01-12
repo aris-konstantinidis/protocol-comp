@@ -29,8 +29,7 @@
             <div class="form-group" v-if="fsmVar.fsm_tpl === transfer.child">
 
               <!-- integrate monaco editor -->
-
-              <textarea :id="fsmVar.id" rows='9' class="form-control bg-dark text-light border-light" style="font-family:mono;" :value="JSON.stringify(fsmVar.payload, undefined, 2)"></textarea>
+              <AceEditor :key="forceRerender" :payload="JSON.parse(JSON.stringify(fsmVar.payload))" :id="JSON.parse(JSON.stringify(fsmVar.id))"/>
             </div>
           </div>
         </form>
@@ -46,9 +45,12 @@
 </template>
 
 <script>
-
+import AceEditor from './AceEditor'
 import { Trial, Variable } from '../../definitions.js'
 export default {
+  components: {
+    AceEditor
+  },
   computed: {
     mutatedElement() {
       return this.$store.state.mutatedElement
@@ -67,10 +69,19 @@ export default {
     },
     transfer() {
       return this.$store.state.transfer
+    },
+    activeVariables() {
+      return this.$store.state.activeVariables
     }
+  },
+  mounted() {
+    this.$root.$on("forceRerender", () => {
+      this.forceRerender++
+    })
   },
   data() {
     return {
+      forceRerender: 0,
       name: '',
       description: '',
       blocking: false,
@@ -92,39 +103,47 @@ export default {
           }, obj)
     },
     newTrialInstance(name) {
-      this.fsm_tpl.id = this.transfer.child
-      for (var fsmVar in this.fsmVars) {
-        if (this.transfer.child === this.fsmVars[fsmVar].fsm_tpl) {
-          var payload = document.getElementById(this.fsmVars[fsmVar].id).value
-          payload = JSON.parse(payload)
-          for (var i = 0; i < this.fsmVars[fsmVar].vars.length; i++) {
-            var transition = this.fsmVars[fsmVar].vars[i].transition
-            var event_idx = this.fsmVars[fsmVar].vars[i].event_idx
-            var variable_idx = this.fsmVars[fsmVar].vars[i].variable_idx
-            var value = this.getValue(payload, this.fsmVars[fsmVar].vars[i].path)
-            var newVar = new Variable(transition, event_idx, variable_idx, value)
-            this.fsm_tpl.variables.push(newVar)
+      // try {
+        this.fsm_tpl.id = this.transfer.child
+
+        for (var fsmVar in this.fsmVars) {
+          // get vars of correct fms-template
+          if (this.transfer.child === this.fsmVars[fsmVar].fsm_tpl) {
+
+            var thisVar = this.activeVariables.find(varia => varia.id === parseInt(fsmVar))
+
+            for (var i = 0; i < this.fsmVars[fsmVar].vars.length; i++) {
+              var transition = this.fsmVars[fsmVar].vars[i].transition
+              var event_idx = this.fsmVars[fsmVar].vars[i].event_idx
+              var variable_idx = this.fsmVars[fsmVar].vars[i].variable_idx
+              var value = this.getValue(thisVar.payload, this.fsmVars[fsmVar].vars[i].path)
+              var newVar = new Variable(transition, event_idx, variable_idx, value)
+              this.fsm_tpl.variables.push(newVar)
+            }
           }
         }
-      }
-      this.$store.commit("MUTATED_ELEMENT", { name: this.transfer.parent, ofClass: 'BlockDef' })
-      this.$store.commit('ADD_ITEM', {
-        action: "TTB",
-        origin: this.transfer.child,
-        target: this.transfer.parent,
-        item: new Trial(this.name, this.description, this.blocking, this.fsm_tpl),
-        index: this.transfer.index
-      })
-      this.name = ''
-      this.description = ''
-      this.blocking = false
-      this.fsm_tpl = {
-        id: '',
-        variables: []
-      }
-      if (this.mutatedElement.hasInstances) {
-        this.$refs['openAskUpdateBlockDefChildren'].click()
-      }
+        this.$store.commit("MUTATED_ELEMENT", { name: this.transfer.parent, ofClass: 'BlockDef' })
+        this.$store.commit('ADD_ITEM', {
+          action: "TTB",
+          origin: this.transfer.child,
+          target: this.transfer.parent,
+          item: new Trial(this.name, this.description, this.blocking, this.fsm_tpl),
+          index: this.transfer.index
+        })
+        this.name = ''
+        this.description = ''
+        this.blocking = false
+        this.fsm_tpl = {
+          id: '',
+          variables: []
+        }
+        this.$store.commit("RESET_ACTIVE_VARIABLES")
+        if (this.mutatedElement.hasInstances) {
+          this.$refs['openAskUpdateBlockDefChildren'].click()
+        }
+      // } catch (error) {
+      //   this.$store.commit("LOG_ERROR", error)
+      // }
     }
   }
 }

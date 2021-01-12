@@ -11,7 +11,7 @@
       </div>
     </div>
     <p class="card-text">
-      <button @mousedown="removeException" type="button" class="handle btn btn-light float-right ml-2">Drag</button>
+      <button @mousedown="removeException(), resetActiveVars()" type="button" class="handle btn btn-light float-right ml-2">Drag</button>
       <button @click="open = true" v-if="open === false" class="btn btn-primary float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">More</button>
       <button @click="open = false" v-if="open === true" class="btn btn-warning float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Hide</button>
       <button @click="preview" data-target="#previewModal" data-toggle="modal" class="btn btn-secondary float-right">JSON</button>
@@ -31,6 +31,9 @@ export default {
     def: Object
   },
   methods: {
+    resetActiveVars() {
+      this.$store.commit("RESET_ACTIVE_VARIABLES")
+    },
     removeException() {
       this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
     },
