@@ -38,12 +38,8 @@ export default new Vuex.Store({
     subjectsJSON: '',
     subjectsJsonValid: null,
     activeVariables: [],
-    logger: { transfers: [], errors: [] }
   },
   mutations: {
-    LOG_ERROR(state, error) {
-      state.logger.errors.push(error)
-    },
     RESET_ACTIVE_VARIABLES(state) {
       state.activeVariables = []
       for (var i = 0; i < state.fsmVars.length; i++) {
@@ -53,23 +49,6 @@ export default new Vuex.Store({
     UPDATE_ACTIVE_VARIABLES(state, { payload, id }) {
       var index = state.activeVariables.findIndex(variable => variable.id == parseInt(id))
       state.activeVariables[index].payload = payload
-    },
-    SAVE_STATE(state) {
-      localStorage.setItem('names', JSON.stringify(state.names))
-      localStorage.setItem('blockDefs', JSON.stringify(state.blockDefs))
-      localStorage.setItem('parBlockDefs', JSON.stringify(state.parBlockDefs))
-    },
-    RETRIEVE_STATE(state) {
-      if (localStorage.getItem('names')) state.names = JSON.parse(localStorage.getItem('names'))
-      if (localStorage.getItem('names')) state.blockDefs = JSON.parse(localStorage.getItem('blockDefs'))
-      if (localStorage.getItem('names')) state.parBlockDefs = JSON.parse(localStorage.getItem('parBlockDefs'))
-    },
-    EMPTY(state) {
-      state.names = []
-      state.transfer = ''
-      state.transferChildException = null
-      state.blockDefs = []
-      state.parBlockDefs = []
     },
     EXPORT_CONFIGURATION(state) {
       for (var protocol in state.protocols) {
@@ -92,8 +71,15 @@ export default new Vuex.Store({
           subjectsJSON.subjects.push(JSON.parse(JSON.stringify(state.protocols[protocol].subjects[subject])))
         }
       }
+      for (var sub in subjectsJSON.subjects) {
+        for (var trial in subjectsJSON.subjects[sub].protocol.trials) {
+          subjectsJSON.subjects[sub].protocol.trials[trial].labels.shift()
+          subjectsJSON.subjects[sub].protocol.trials[trial].labels.pop()
+        }
+      }
       state.subjectsJSON = subjectsJSON
       state.dataToPreview = subjectsJSON
+      // run last validation to check subjects.json validity
       state.subjectsJsonValid = validate(subjectsJSON, subjectsSchema)
       function generateExport(object) {
         object = JSON.parse(JSON.stringify(object))
@@ -108,6 +94,7 @@ export default new Vuex.Store({
             nameArray.pop();
             return
           }
+
           nameArray.push(JSON.parse(JSON.stringify(object.name)))
           object.labels = JSON.parse(JSON.stringify(nameArray))
           product.push(object)
@@ -116,6 +103,7 @@ export default new Vuex.Store({
         extract(object)
         return product
       }
+
     },
     SET_FSMS(state, fsm) {
       state.fsms.push(fsm)

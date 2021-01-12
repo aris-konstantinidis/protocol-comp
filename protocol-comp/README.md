@@ -30,11 +30,10 @@ To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Insta
 - `prevent` self assignments
 - `mark` valid drop zones while dragging elements
 - `inspect` underlying JSON structure of definitions/templates
-
 - `auto-label` and `flatten` exports as specified in `subjects.schema.json`
 - `export` `subjects.json` when configuration is finished
-- `save` or `clear` current configuration state to/from localStorage (helps while testing)
 - `validation` and `visual feedback` of the generated output (subjects.json against subjects.schema.json)
+
 
 
 ## Under Construction
@@ -44,9 +43,3 @@ To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Insta
   - a provisional textarea is used
 - set default `blocking` state to `true` if item is the last one in a block
   - in which state should this be checked? On export? Trials inside a block-instance can be changed, which could result in a new last element.
-
-## Bugs
-- not all elements are draggable after state retrieval from `localStorage`
-
-## Todo
-- schema validation and visual error feedback via external library (on payload change). Ask Simon to give the schema for the whole object and not only for the target variable. or auto-create a schema based on the object (..no enums)

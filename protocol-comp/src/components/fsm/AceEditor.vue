@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
 export default {
   components: {
     editor: require('vue2-ace-editor'),
@@ -13,13 +12,17 @@ export default {
   watch: {
     data: {
       handler: function(news, old) {
-        this.$store.commit('UPDATE_ACTIVE_VARIABLES', { id: this.id, payload: JSON.parse(news) })
+        try {
+          this.$store.commit('UPDATE_ACTIVE_VARIABLES', { id: this.id, payload: JSON.parse(news) })
+        } catch(error) {
+
+        }
       }
     }
   },
   data() {
     return {
-      data: JSON.stringify(this.payload, undefined, 2)
+      data: JSON.stringify(this.payload, undefined, 2),
     }
   },
   props: {
@@ -41,4 +44,7 @@ export default {
 </script>
 
 <style scoped>
+.ace_editor {
+  font-size: 16px !important;
+}
 </style>
