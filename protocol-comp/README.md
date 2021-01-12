@@ -47,7 +47,6 @@ To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Insta
 
 ## Bugs
 - not all elements are draggable after state retrieval from `localStorage`
-- can not create second variable as the activeVariables initialization is only done on modal mount which occurs 1 time.
 
 ## Todo
 - schema validation and visual error feedback via external library (on payload change). Ask Simon to give the schema for the whole object and not only for the target variable. or auto-create a schema based on the object (..no enums)
