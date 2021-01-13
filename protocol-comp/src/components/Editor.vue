@@ -37,8 +37,8 @@
           <ProtocolTemp :def="def" />
         </div>
     </div>
-    <div v-else-if="!edit" class="col p-0 m-3 shadow-sm bg-white border" style="overflow-y: scroll; height: 900px;">
-      <JsonViewer :value="draft" :expand-depth="6" style="font-family: monospace;"></JsonViewer>
+    <div v-else-if="!edit" class="col p-0 m-3 bg-white shadow-sm border">
+      <Draft />
     </div>
     <TrialInstForm />
   </div>
@@ -51,7 +51,7 @@ import FsmTemplate from './fsm/FsmTemplate'
 import BlockDef from './block/BlockDef'
 import ParBlockDef from './parent/ParBlockDef'
 import ProtocolTemp from './protocol/ProtocolTemp'
-import JsonViewer from 'vue-json-viewer'
+import Draft from './Draft'
 export default {
   data() {
     return {
@@ -59,7 +59,7 @@ export default {
     }
   },
   components: {
-    draggable, BlockDef, FsmTemplate, ParBlockDef, ProtocolTemp, TrialInstForm, JsonViewer
+    draggable, BlockDef, FsmTemplate, ParBlockDef, ProtocolTemp, TrialInstForm, Draft
   },
   computed: {
     protocols() {

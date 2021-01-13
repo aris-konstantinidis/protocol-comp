@@ -3,8 +3,9 @@ import Vuex, {
   Store
 } from 'vuex'
 import axios from 'axios'
-var validate = require('jsonschema').validate
 import subjectsSchema from '../jsonSchemas/subjects.schema.json'
+import jsen from 'jsen'
+var validate = jsen(subjectsSchema)
 import {
   BlockDef,
   Fsm,
@@ -36,9 +37,10 @@ export default new Vuex.Store({
     targetProtocol: false,
     mutatedElement: null,
     subjectsJSON: '',
-    subjectsJsonValid: null,
     activeVariables: [],
-    edit: true
+    edit: true,
+    valid: "badge badge-success mr-2",
+    logs: []
   },
   mutations: {
     SET_EDIT(state) {
@@ -83,8 +85,6 @@ export default new Vuex.Store({
       }
       state.subjectsJSON = subjectsJSON
       state.dataToPreview = subjectsJSON
-      // run last validation to check subjects.json validity
-      state.subjectsJsonValid = validate(subjectsJSON, subjectsSchema)
 
       function generateExport(object) {
         object = JSON.parse(JSON.stringify(object))
@@ -109,6 +109,13 @@ export default new Vuex.Store({
         return product
       }
 
+      // validate draft
+      var valid = validate(state.subjectsJSON)
+      if (valid) {
+        state.valid = "badge badge-success mr-2"
+      } else {
+        state.valid = "badge badge-danger mr-2"
+      }
     },
     SET_FSMS(state, fsm) {
       state.fsms.push(fsm)
