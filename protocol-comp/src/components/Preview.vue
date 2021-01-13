@@ -1,6 +1,6 @@
 <template>
 <div v-if="file" class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModal" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header border-white">
         <h5 v-if="this.file.name" class="modal-title">{{this.file.name}}</h5>

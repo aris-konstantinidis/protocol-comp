@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="bg-light">
-    <div class="row w-100 m-0 bg-dark shadow-sm" id="tool-bar"><ToolBar/></div>
+    <div class="row w-100 m-0 p-0 bg-dark shadow-sm" id="tool-bar"><ToolBar/></div>
     <div class="row w-100 m-0" id="editor">
       <Editor />
     </div>
@@ -32,5 +32,8 @@ export default {
   }
   #editor {
     height: calc(100% - 70px);
+  }
+  html, body {
+    background-color: var(--light);
   }
 </style>

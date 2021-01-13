@@ -75,10 +75,11 @@ class ParBlock {
 
 
 class Trial {
-  static id = 1
+    static counter = 1
     constructor(name, description, blocking, fsm_tpl) {
-        this.id = Trial.id
-        Trial.id++
+        this.id = Trial.counter
+        console.log(Trial.counter)
+        Trial.counter++
         this.name = name
         this.description = description
         this.blocking = blocking
@@ -101,11 +102,12 @@ class Fsm {
 }
 class FsmVars { // contains FSM-Variables
     static id = 0
-    constructor(fsm_tpl, payload) {
+    constructor(fsm_tpl, payload, schema) {
         this.id = FsmVars.id
         FsmVars.id++
         this.fsm_tpl = fsm_tpl
         this.payload = payload
+        this.schema = schema
         this.vars = [] // contains Var instances
     }
 }

@@ -38,8 +38,12 @@ export default new Vuex.Store({
     subjectsJSON: '',
     subjectsJsonValid: null,
     activeVariables: [],
+    edit: true
   },
   mutations: {
+    SET_EDIT(state) {
+      state.edit = !state.edit
+    },
     RESET_ACTIVE_VARIABLES(state) {
       state.activeVariables = []
       for (var i = 0; i < state.fsmVars.length; i++) {
@@ -81,6 +85,7 @@ export default new Vuex.Store({
       state.dataToPreview = subjectsJSON
       // run last validation to check subjects.json validity
       state.subjectsJsonValid = validate(subjectsJSON, subjectsSchema)
+
       function generateExport(object) {
         object = JSON.parse(JSON.stringify(object))
         var product = []
@@ -112,6 +117,7 @@ export default new Vuex.Store({
     SET_PROTOCOLS(state, protocol) {
       state.protocols.push(protocol)
       state.names.push(protocol.name)
+      this.commit("EXPORT_CONFIGURATION")
     },
     SET_FSM_VARIABLES(state, payload) {
       state.fsmVars.push(payload)
@@ -133,9 +139,11 @@ export default new Vuex.Store({
           parent === item.ref ? list.splice(i, 1) : item.items ? remove(item.items, parent) : false
         })
       }
+      this.commit("EXPORT_CONFIGURATION")
     },
     MUTATED_ELEMENT(state, element) {
       state.mutatedElement = element
+      this.commit("EXPORT_CONFIGURATION")
     },
     TARGET_PROTOCOL(state, status) {
       state.targetProtocol = status
@@ -155,18 +163,12 @@ export default new Vuex.Store({
     SET_DATA_TO_PREVIEW(state, data) {
       state.dataToPreview = data
     },
-    NEW_DEF(state, {
-      name,
-      ofClass
-    }) {
+    NEW_DEF(state, {name, ofClass}) {
       ofClass === "BlockDef" ? state.blockDefs.push(new BlockDef(name)) : state.parBlockDefs.push(new ParBlockDef(name))
       state.names.push(name)
+      this.commit("EXPORT_CONFIGURATION")
     },
-    DUPL_DEF(state, {
-      name,
-      items,
-      ofClass
-    }) {
+    DUPL_DEF(state, {name, items, ofClass}) {
       var copy;
       if (ofClass === 'BlockDef') {
         copy = new BlockDef(name)
@@ -181,22 +183,16 @@ export default new Vuex.Store({
       }
       state.names.push(name)
     },
-    DELETE_DEF(state, {
-      name,
-      ofClass
-    }) {
+    DELETE_DEF(state, {name, ofClass}) {
       if (ofClass === "BlockDef") {
         state.blockDefs.splice(state.blockDefs.findIndex(def => def.name === name), 1)
       } else if (ofClass === "ParBlockDef") {
         state.parBlockDefs.splice(state.parBlockDefs.findIndex(def => def.name === name), 1)
       }
       state.names.splice(state.names.findIndex(n => n === name), 1)
+      this.commit("EXPORT_CONFIGURATION")
     },
-    DELETE_ITEM(state, {
-      index,
-      parent,
-      ofClass
-    }) {
+    DELETE_ITEM(state, {index, parent, ofClass}) {
       if (ofClass === 'BlockDef') {
         const blockDef = state.blockDefs.findIndex(block => block.name === parent)
         state.blockDefs[blockDef].items.splice(index, 1)
@@ -210,15 +206,9 @@ export default new Vuex.Store({
         state.protocols[protocol].items.splice(index, 1)
         state.names.splice(state.names.findIndex(n => n === name), 1)
       }
-
+      this.commit("EXPORT_CONFIGURATION")
     },
-    ADD_ITEM(state, {
-      action,
-      origin,
-      target,
-      item,
-      index
-    }) {
+    ADD_ITEM(state, {action, origin, target, item, index}) {
       switch (action) {
         case 'TTB': // trial to blockdef
           state.blockDefs[state.blockDefs.findIndex(bl => bl.name === target)].items.splice(index, 0, item)
@@ -252,12 +242,11 @@ export default new Vuex.Store({
           state.parBlockDefs[state.parBlockDefs.findIndex(proto => proto.name === target)].items.splice(index, 0, newParInstance)
           break
       }
+      this.commit("EXPORT_CONFIGURATION")
     }
   },
   actions: {
-    GET_FSMS({
-      commit
-    }) {
+    GET_FSMS({commit}) {
       axios.get('fsms').then((res) => {
         const fsms = res.data.fsms
         for (var fsm in fsms) {
@@ -265,7 +254,7 @@ export default new Vuex.Store({
             for (var event in fsms[fsm].transitions[transition].events) {
               if (fsms[fsm].transitions[transition].events[event].new) {
                 if (fsms[fsm].transitions[transition].events[event].new.variables) {
-                  var newFsmVars = new FsmVars(fsm, fsms[fsm].transitions[transition].events[event].new.payload)
+                  var newFsmVars = new FsmVars(fsm, fsms[fsm].transitions[transition].events[event].new.payload, fsms[fsm].transitions[transition].events[event].new.payloadSchema)
                   for (var variable in fsms[fsm].transitions[transition].events[event].new.variables) {
                     const {
                       path
@@ -282,10 +271,7 @@ export default new Vuex.Store({
         }
       })
     },
-    GET_PROTOCOLS({
-      state,
-      commit
-    }) {
+    GET_PROTOCOLS({state, commit}) {
       axios.get('protocols').then((res) => {
         const protocols = res.data.protocols
         for (var protocol in protocols) {

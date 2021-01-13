@@ -31,11 +31,14 @@
     </div>
 
     <!-- protocol definitions -->
-    <div class="col p-0 m-3">
+    <div v-if="edit" class="col p-0 m-3">
       <button type="button" ref="openParBlockInstFormTrigger" style="display: none;" data-toggle="modal" data-target="#newParBlockInst"></button>
         <div class="mb-3" v-for="def in protocols" :key="def.name">
           <ProtocolTemp :def="def" />
         </div>
+    </div>
+    <div v-else-if="!edit" class="col p-0 m-3 shadow-sm bg-white border" style="overflow-y: scroll; height: 900px;">
+      <JsonViewer :value="draft" :expand-depth="6" style="font-family: monospace;"></JsonViewer>
     </div>
     <TrialInstForm />
   </div>
@@ -48,6 +51,7 @@ import FsmTemplate from './fsm/FsmTemplate'
 import BlockDef from './block/BlockDef'
 import ParBlockDef from './parent/ParBlockDef'
 import ProtocolTemp from './protocol/ProtocolTemp'
+import JsonViewer from 'vue-json-viewer'
 export default {
   data() {
     return {
@@ -55,7 +59,7 @@ export default {
     }
   },
   components: {
-    draggable, BlockDef, FsmTemplate, ParBlockDef, ProtocolTemp, TrialInstForm
+    draggable, BlockDef, FsmTemplate, ParBlockDef, ProtocolTemp, TrialInstForm, JsonViewer
   },
   computed: {
     protocols() {
@@ -75,6 +79,12 @@ export default {
     },
     transferChildException() {
       return this.$store.state.transferChildException
+    },
+    edit() {
+      return this.$store.state.edit
+    },
+    draft() {
+      return this.$store.state.subjectsJSON
     }
   },
   methods: {

@@ -1,7 +1,7 @@
 <template>
 <!-- new trial instance form modal -->
 <div class="modal fade" id="newTrialInstForm" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header border-white">
         <h5 class="modal-title">New Trial Instance</h5>
@@ -29,7 +29,7 @@
             <div class="form-group" v-if="fsmVar.fsm_tpl === transfer.child">
 
               <!-- integrate monaco editor -->
-              <AceEditor :key="forceRerender" :payload="JSON.parse(JSON.stringify(fsmVar.payload))" :id="JSON.parse(JSON.stringify(fsmVar.id))"/>
+              <AceEditor :key="forceRerender" :schema="fsmVar.schema" :payload="JSON.parse(JSON.stringify(fsmVar.payload))" :id="JSON.parse(JSON.stringify(fsmVar.id))"/>
             </div>
           </div>
         </form>
