@@ -55,6 +55,7 @@ export default {
     },
     newBlockInstance() {
       // add to parentBlock or to protocol
+      if (this.name == "") return false
       if (this.targetProtocol) {
         this.$store.commit('ADD_ITEM', { action: "BTPR", origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
       } else if (!this.targetProtocol) {

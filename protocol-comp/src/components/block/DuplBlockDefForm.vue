@@ -48,6 +48,7 @@ export default {
       this.$store.commit('CHECK_NAME', this.name)
     },
     newBlockDef() {
+      if (this.name == "") return false
       var items = []
       for (var i = 0; i < this.def.items.length; i++) {
         items.push(this.def.items[i])

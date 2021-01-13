@@ -48,6 +48,7 @@ export default {
       this.$store.commit('CHECK_NAME', this.name)
     },
     newBlockDef() {
+      if (this.name == "") return false
         this.$store.commit('NEW_DEF', { name: this.name, ofClass: 'BlockDef'})
         this.name = ''
     },

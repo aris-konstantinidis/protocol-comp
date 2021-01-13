@@ -103,6 +103,7 @@ export default {
           }, obj)
     },
     newTrialInstance(name) {
+      if (this.name == "") return false
       // try {
         this.fsm_tpl.id = this.transfer.child
 

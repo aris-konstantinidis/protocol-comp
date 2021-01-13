@@ -56,6 +56,7 @@ export default {
       this.$store.commit('CHECK_NAME', this.name)
     },
     newParBlockInst() {
+      if (this.name == "") return false
       if (this.transferChildException) {
         this.$store.commit('ADD_ITEM', { action: 'PRTPR', origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
       } else {
