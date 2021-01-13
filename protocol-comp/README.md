@@ -32,6 +32,7 @@ To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Insta
 - `inspect` underlying JSON structure of definitions/templates
 - `auto-label` and `flatten` exports as specified in `subjects.schema.json`
 - `export` `subjects.json` when configuration is finished
+- `validate, auto-suggest and lint` user-changed payload objects against given schemas (**request for payload-schema instead of variable schemas**)
 - `validation` and `visual feedback` of the generated output (subjects.json against subjects.schema.json)
 
 
@@ -39,7 +40,5 @@ To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Insta
 ## Under Construction
 - the mutation of a definition does not yet prompt the user to `choose` between changing the definition and all its instances or creating a new definition with these mutations
   - for now, the user is just notified that the mutation has affected all instances
-- integration of `monaco-editor` for schema-validation and auto-suggestions
-  - a provisional textarea is used
 - set default `blocking` state to `true` if item is the last one in a block
   - in which state should this be checked? On export? Trials inside a block-instance can be changed, which could result in a new last element.
