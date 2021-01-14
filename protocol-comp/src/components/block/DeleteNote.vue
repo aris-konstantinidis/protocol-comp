@@ -16,8 +16,8 @@
         </form>
       </div>
       <div class="modal-footer border-white">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button @click="deleteInstances" type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
+        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancel</button>
+        <button @click="deleteInstances" type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Delete</button>
       </div>
     </div>
   </div>

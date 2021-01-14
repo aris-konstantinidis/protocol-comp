@@ -1,6 +1,6 @@
 <template>
 <div class="parBlockDefDropZone card shadow-sm">
-  <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-secondary">Protocol Template</span></h5>
+  <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-secondary">Protocol Template</span> <span class="badge badge-info">{{def.subjects.length}} subjects</span></h5> 
   <div class="card-body">
     <draggable class="dragArea" :id="def.name" :list="def.items" :group="activeList">
       <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
@@ -13,7 +13,7 @@
       </div>
     </draggable>
     <p class="card-text">
-      <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-secondary float-right">JSON</button>
+      <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-sm btn-secondary float-right">JSON</button>
     </p>
   </div>
 </div>

@@ -37,7 +37,7 @@
           <ProtocolTemp :def="def" />
         </div>
     </div>
-    <div v-else-if="!edit" class="col p-0 m-3 bg-white shadow-sm border">
+    <div v-else-if="!edit" class="col p-0 m-3 bg-white shadow-sm border" style="overflow-y: scroll; height: calc(100% - 70px);">
       <Draft />
     </div>
     <TrialInstForm />

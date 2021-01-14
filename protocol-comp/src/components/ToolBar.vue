@@ -6,15 +6,10 @@
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <button type="button" data-toggle="modal" data-target="#newBlockDefInstForm" class="btn btn-success mr-2">New BlockDef</button>
+        <button type="button" data-toggle="modal" data-target="#newBlockDefInstForm" class="btn btn-sm btn-success mr-2">New BlockDef</button>
       </li>
       <li class="nav-item">
-        <button type="button" data-toggle="modal" data-target="#newParBlockDefInstForm" class="btn btn-success mr-2">New ParBlockDef</button>
-      </li>
-      <li class="nav-item">
-      </li>
-      <li class="nav-item">
-        <button @click="switchView" type="button" class="btn btn-info mr-5">Draft  </button>
+        <button type="button" data-toggle="modal" data-target="#newParBlockDefInstForm" class="btn btn-sm btn-success mr-5">New ParBlockDef</button>
       </li>
       <li class="nav-item" v-if="transfer.parent">
         <a class="nav-link">Transfer from <span class="badge badge-light">{{transfer.child}}</span> to <span class="badge badge-light">{{transfer.parent}}</span> at index <span class="badge badge-light">{{transfer.index}}</span></span></a>
@@ -22,20 +17,23 @@
     </ul>
     <span class="navbar-text">
       <span :class="valid">valid</span>
-      <button @click='exportConfig' data-toggle="modal" data-target="#previewModal" type="button" class="btn btn-primary mr-2"> Export</button>
+      <button @click="switchView" type="button" class="btn btn-sm btn-info mr-2">Draft  </button>
+      <button data-toggle="modal" data-target="#confirmExport" type="button" class="btn btn-sm btn-primary mr-2"> Export</button>
     </span>
   </div>
   <BlockDefInstForm />
   <ParBlockDefInstForm />
+  <ConfirmExport />
 </nav>
 </template>
 
 <script>
 import BlockDefInstForm from './block/BlockDefInstForm'
 import ParBlockDefInstForm from './parent/ParBlockDefInstForm'
+import ConfirmExport from './protocol/ConfirmExport'
 export default {
   components: {
-    BlockDefInstForm, ParBlockDefInstForm
+    BlockDefInstForm, ParBlockDefInstForm, ConfirmExport
   },
   computed: {
     valid() {
@@ -46,9 +44,6 @@ export default {
     },
   },
   methods: {
-    exportConfig() {
-      this.$store.commit("EXPORT_CONFIGURATION")
-    },
     switchView() {
       this.$store.commit("SET_EDIT")
     }

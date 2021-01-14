@@ -40,9 +40,45 @@ export default new Vuex.Store({
     activeVariables: [],
     edit: true,
     valid: "badge badge-success mr-2",
-    logs: []
+    logs: [],
   },
   mutations: {
+    OVERRIDE_DRAFT(state, final) {
+      state.subjectsJSON = final
+    },
+    SET_BLOCKING(state) {
+      var toExport = setBlocking(state.subjectsJSON)
+
+      this.commit("OVERRIDE_DRAFT", toExport)
+      function setBlocking(draft) {
+      draft.subjects.forEach((sub) => {
+        if (sub.protocol.trials.length > 0) {
+          var lastTrials = getIndexes(sub.protocol.trials)
+          sub.protocol.trials.forEach((trial, index) => {
+            for (var j in lastTrials) {
+              if (lastTrials[j] === index) {
+                trial.blocking = true
+              }
+            }
+          })
+        }
+      })
+      function getIndexes(trials) {
+        var indexes = []
+        var currentLabel = JSON.stringify(trials[0].labels)
+        for (var i = 0; i < trials.length; i++) {
+          if (JSON.stringify(trials[i].labels) !== currentLabel) {
+            indexes.push(i-1)
+            currentLabel = JSON.stringify(trials[i].labels)
+          }
+        }
+        indexes.push(trials.length - 1)
+        return indexes
+      }
+      return draft
+    }
+    // this.commit("EXPORT_CONFIGURATION")
+    },
     SET_EDIT(state) {
       state.edit = !state.edit
     },

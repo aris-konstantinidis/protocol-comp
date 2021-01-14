@@ -20,8 +20,8 @@
         </div>
       </div>
       <div class="modal-footer border-white">
-        <button type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newBlockDef" type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
+        <button @click="newBlockDef" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
       </div>
     </div>
   </div>

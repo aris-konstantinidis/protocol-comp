@@ -19,11 +19,11 @@
         </draggable>
       </div>
       <p class="card-text">
-        <button @mousedown="raiseException(def)" type="button" class="handle btn btn-light float-right ml-2">Drag</button>
-        <button @click="open = false" v-if="open === true" class="btn btn-warning float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Hide</button>
-        <button @click="open = true" v-if="open === false" class="btn btn-primary float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Edit</button>
-        <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-secondary float-right">JSON</button>
-        <button @click='setParBlockDef' type="button" class="btn btn-info float-right mr-2" data-toggle="modal" data-target="#duplicateParBlockDef">Duplicate</button>
+        <button @mousedown="raiseException(def)" type="button" class="handle btn-sm btn btn-light float-right ml-2">Drag</button>
+        <button @click="open = false" v-if="open === true" class="btn btn-sm btn-warning float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Hide</button>
+        <button @click="open = true" v-if="open === false" class="btn btn-sm btn-primary float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Edit</button>
+        <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-sm btn-secondary float-right">JSON</button>
+        <button @click='setParBlockDef' type="button" class="btn btn-sm btn-info float-right mr-2" data-toggle="modal" data-target="#duplicateParBlockDef">Duplicate</button>
       </p>
     </div>
     <DuplParBlockDefForm :def='def' />

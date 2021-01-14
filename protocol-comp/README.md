@@ -1,11 +1,6 @@
 # Protocol Component
 
-## Testing
-Click [here](http://207.154.210.124:8080/) to test online (currently unavailable)
-
-To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Install **dependencies** separately for the **dev-server** and the **protocol-comp** front. The dev-server is used to provide dummy endpoints for `fsms.json` and `protocols.json`. Run in development mode with:
-- `node server.js` in *./dev-server*
-- `npm run serve` in *./protocol-comp*
+Click [here](http://104.236.41.74:8080/) to test online.
 
 ## Features
 - `auto-load` protocols.json and fsms.json
@@ -33,12 +28,11 @@ To run locally, the [vue-cli](https://cli.vuejs.org/) has to be installed. Insta
 - `auto-label` and `flatten` exports as specified in `subjects.schema.json`
 - `export` `subjects.json` when configuration is finished
 - `validate, auto-suggest and lint` user-changed payload objects against given schemas (**request for payload-schema instead of variable schemas**)
-- `validation` and `visual feedback` of the generated output (subjects.json against subjects.schema.json)
+- `validation` of subjects.json against its schema.
+- `blocking` is set to `true` for each block's last trial on export
 
 
 
 ## Under Construction
 - the mutation of a definition does not yet prompt the user to `choose` between changing the definition and all its instances or creating a new definition with these mutations
-  - for now, the user is just notified that the mutation has affected all instances
-- set default `blocking` state to `true` if item is the last one in a block
-  - in which state should this be checked? On export? Trials inside a block-instance can be changed, which could result in a new last element.
+  - for now, the user is notified that the mutation has affected all instances

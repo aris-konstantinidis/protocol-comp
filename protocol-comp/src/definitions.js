@@ -78,7 +78,6 @@ class Trial {
     static counter = 1
     constructor(name, description, blocking, fsm_tpl) {
         this.id = Trial.counter
-        console.log(Trial.counter)
         Trial.counter++
         this.name = name
         this.description = description

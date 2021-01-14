@@ -16,7 +16,7 @@
         </form>
       </div>
       <div class="modal-footer border-white">
-        <button type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Okay</button>
+        <button type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Okay</button>
       </div>
     </div>
   </div>

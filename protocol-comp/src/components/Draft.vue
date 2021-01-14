@@ -1,5 +1,5 @@
 <template>
-    <JsonViewer class="h-100" :value="draft" :expand-depth="6" style="font-family: monospace; overflow-y: scroll;"></JsonViewer>
+    <JsonViewer class="h-100" :value="draft" :expand-depth="6" style="font-family: monospace;"></JsonViewer>
 </template>
 
 <script>

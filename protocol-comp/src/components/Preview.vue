@@ -1,6 +1,6 @@
 <template>
 <div v-if="file" class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModal" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header border-white">
         <h5 v-if="this.file.name" class="modal-title">{{this.file.name}}</h5>
@@ -14,7 +14,7 @@
           <JsonViewer :value="file" style="font-family: monospace;"></JsonViewer>
       </div>
       <div class="modal-footer border-white">
-        <button type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm btn-primary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

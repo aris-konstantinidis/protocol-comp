@@ -35,8 +35,8 @@
         </form>
       </div>
       <div class="modal-footer border-white">
-        <button type="button" class="btn btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newTrialInstance(def.name)" type="button" class="btn btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
+        <button @click="newTrialInstance(def.name)" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
         <button ref="openAskUpdateBlockDefChildren" style="display: none;" data-toggle="modal" data-target="#askUpdateBlockDefChildren"></button>
       </div>
     </div>
