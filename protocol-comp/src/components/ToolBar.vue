@@ -12,7 +12,10 @@
         <button type="button" data-toggle="modal" data-target="#newParBlockDefInstForm" class="btn btn-sm btn-success mr-5">New ParBlockDef</button>
       </li>
       <li class="nav-item" v-if="transfer.parent">
-        <a class="nav-link">Transfer from <span class="badge badge-light">{{transfer.child}}</span> to <span class="badge badge-light">{{transfer.parent}}</span> at index <span class="badge badge-light">{{transfer.index}}</span></span></a>
+        <a class="nav-link mr-5">Transfered <span class="badge badge-light">{{transfer.child}}</span> to <span class="badge badge-light">{{transfer.parent}}</span> at index <span class="badge badge-light">{{transfer.index}}</span></span></a>
+      </li>
+      <li v-if="mutatedElement" class="nav-item">
+        <a class="nav-link">Mutated <span class="badge badge-light">{{mutatedElement.name}}</span></a>
       </li>
     </ul>
     <span class="navbar-text">
@@ -42,6 +45,9 @@ export default {
     transfer() {
       return this.$store.state.transfer
     },
+    mutatedElement() {
+      return this.$store.state.mutatedElement
+    }
   },
   methods: {
     switchView() {
