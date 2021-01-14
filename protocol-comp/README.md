@@ -12,7 +12,7 @@ To run locally, the [vue-cli](https://cli.vuejs.org/guide/installation.html) has
   - `node server.js`
 
 
-2. in the `protocol-comp`:
+2. in the **protocol-comp**:
   - `npm install`
   - `npm run serve`
   - open http://localhost:8080
