@@ -77,7 +77,6 @@ export default new Vuex.Store({
       }
       return draft
     }
-    this.commit("EXPORT_CONFIGURATION")
     },
     SET_EDIT(state) {
       state.edit = !state.edit
