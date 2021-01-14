@@ -1,6 +1,24 @@
 # Protocol Component
 
+## Testing
+
+#### Online
 Click [here](http://104.236.41.74:8080/) to test online.
+
+#### Local
+To run locally, the [vue-cli](https://cli.vuejs.org/guide/installation.html) has to be installed. The development server is used to dynamically serve the inputs `fsms.json` and `protocols.json`. To test different inputs, change these files in the **dev-server** directory. Run the component with the following steps:
+1. in the **dev-server** directory:
+  - `npm install`
+  - `node server.js`
+
+
+2. in the `protocol-comp`:
+  - `npm install`
+  - `npm run serve`
+  - open http://localhost:8080
+
+#### Build for production
+`npm run build` will generate the **dist** directory under the same root directory.
 
 ## Features
 - `auto-load` protocols.json and fsms.json
@@ -30,9 +48,3 @@ Click [here](http://104.236.41.74:8080/) to test online.
 - `validate, auto-suggest and lint` user-changed payload objects against given schemas (**request for payload-schema instead of variable schemas**)
 - `validation` of subjects.json against its schema.
 - `blocking` is set to `true` for each block's last trial on export
-
-
-
-## Under Construction
-- the mutation of a definition does not yet prompt the user to `choose` between changing the definition and all its instances or creating a new definition with these mutations
-  - for now, the user is notified that the mutation has affected all instances
