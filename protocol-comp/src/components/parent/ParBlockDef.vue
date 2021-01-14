@@ -10,7 +10,7 @@
             <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
               <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
                 <strong class="font-weight-bold">{{item.name}} <span class="badge badge-dark">Block Instance</span> <span class="badge badge-success">{{item.ref}}</span></strong>
-                <button @click='deleteItem(index)' type="button" class="close" aria-label="Close">
+                <button @click='deleteItem(index)' data-toggle="modal" data-target="#confirmDelete" type="button" class="close" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -83,8 +83,7 @@ export default {
       }
     },
     deleteItem(index) {
-      this.$store.commit('DELETE_ITEM', { index: index, parent: this.def.name, ofClass: this.def.constructor.name })
-      this.notify()
+      this.$root.$emit("delete", { index: index, parent: this.def.name, ofClass: this.def.constructor.name })
     }
   }
 }

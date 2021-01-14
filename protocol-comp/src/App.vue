@@ -4,7 +4,9 @@
     <div class="row w-100 m-0" id="editor">
       <Editor />
     </div>
+    <!-- generic modals -->
     <Preview />
+    <ConfirmDelete />
   </div>
 </template>
 
@@ -12,12 +14,14 @@
 import ToolBar from './components/ToolBar'
 import Editor from './components/Editor'
 import Preview from './components/Preview'
+import ConfirmDelete from './components/ConfirmDelete'
 export default {
   name: 'App',
   components: {
     ToolBar,
     Editor,
-    Preview
+    Preview,
+    ConfirmDelete
   },
   created() {
     this.$store.dispatch('GET_FSMS')

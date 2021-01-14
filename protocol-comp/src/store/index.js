@@ -181,7 +181,6 @@ export default new Vuex.Store({
           parent === item.ref ? list.splice(i, 1) : item.items ? remove(item.items, parent) : false
         })
       }
-      console.log("after instances deleted", state.blockDefs)
       this.commit("EXPORT_CONFIGURATION")
     },
     MUTATED_ELEMENT(state, element) {
@@ -230,7 +229,6 @@ export default new Vuex.Store({
       if (ofClass === "BlockDef") {
         state.blockDefs.splice(state.blockDefs.findIndex(def => def.name == name.name), 1)
       } else if (ofClass === "ParBlockDef") {
-        console.log("in wrong place")
         state.parBlockDefs.splice(state.parBlockDefs.findIndex(def => def.name == name.name), 1)
       }
       state.names.splice(state.names.findIndex(n => n === name), 1)
