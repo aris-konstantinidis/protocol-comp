@@ -1,7 +1,7 @@
 <template>
   <div class="row p-0 m-0 w-100 h-100">
     <!-- fms templates -->
-    <div class="col p-0 m-3">
+    <div class="col p-0 m-3" style="overflow-y: scroll; height: calc(100% - 70px);">
       <draggable handle=".handle" :sort="false" class="dragArea" :list="fsms" :group="{ name: 'fsms', put: false, pull: 'clone'}" :clone="setChildTransfer" @end="setTransferInfo">
         <div class="mb-3" v-for="fsm in fsms" :key="fsm.name">
           <FsmTemplate :def="fsm" />
@@ -10,7 +10,7 @@
     </div>
 
     <!-- block definitions -->
-    <div class="col p-0 m-3">
+    <div class="col p-0 m-3" style="overflow-y: scroll; height: calc(100% - 70px);">
         <button ref="openTrialInstFormTrigger" style="display: none;" data-toggle="modal" data-target="#newTrialInstForm"></button>
       <draggable handle=".handle" :sort="false" class="dragArea" :list="blockDefs" :group="{ name: 'blocks', put: false, pull: 'clone'  }" :clone="setChildTransfer" @end="setTransferInfo">
         <div class="mb-3" v-for="def in blockDefs" :key="def.name">
@@ -19,7 +19,7 @@
       </draggable>
     </div>
     <!-- parent-block definitions -->
-    <div class="col p-0 m-3">
+    <div class="col p-0 m-3" style="overflow-y: scroll; height: calc(100% - 70px);">
       <button type="button" ref="openBlockInstFormTrigger" style="display: none;" data-toggle="modal" data-target="#blockInstForm"></button>
       <draggable handle=".handle" :sort="false" class="dragArea" :group="{ name: 'parBlocks', put: false, pull: 'clone' }" :clone="setChildTransfer" @end="setTransferInfo">
         <div class="mb-3" v-for="def in parBlockDefs" :key="def.name">
@@ -31,7 +31,7 @@
     </div>
 
     <!-- protocol definitions -->
-    <div v-if="edit" class="col p-0 m-3">
+    <div v-if="edit" class="col p-0 m-3" style="overflow-y: scroll; height: calc(100% - 70px);">
       <button type="button" ref="openParBlockInstFormTrigger" style="display: none;" data-toggle="modal" data-target="#newParBlockInst"></button>
         <div class="mb-3" v-for="def in protocols" :key="def.name">
           <ProtocolTemp :def="def" />
