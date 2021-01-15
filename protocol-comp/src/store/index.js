@@ -92,6 +92,17 @@ export default new Vuex.Store({
       state.activeVariables[index].payload = payload
     },
     EXPORT_CONFIGURATION(state) {
+      
+      /*
+      FOR FUTURE CHANGE IN THE STRUCTURE OF SUBJECTS.JSON
+      ---------------------------------------------------------------------------------
+      to create a normalized structure in subjects.json change the following code block
+      for now each subject is assigned a protocol which contains the complete structure
+      the normalized structure would be: 
+        - list of subjects assigned to a protocol - the protocol is only referenced 
+        - list of protocols containing the complete structure
+      */
+      
       for (var protocol in state.protocols) {
         var flatProtocol = generateExport(state.protocols[protocol])
         for (var subject in state.protocols[protocol].subjects) {
