@@ -1,0 +1,2530 @@
+{
+    "fsms": {
+        "video": {
+            "states": {
+                "START": [
+                    "t0:START->AWAIT_LOADING_VIDEO"
+                ],
+                "AWAIT_LOADING_VIDEO": [
+                    "t1:AWAIT_LOADING_VIDEO->END",
+                    "t2:AWAIT_LOADING_VIDEO->LOADING_VIDEO"
+                ],
+                "END": [],
+                "LOADING_VIDEO": [
+                    "t3:LOADING_VIDEO->START_PLAY"
+                ],
+                "START_PLAY": [
+                    "t4:START_PLAY->PLAYING",
+                    "t5:START_PLAY->ERROR",
+                    "t6:START_PLAY->ERROR"
+                ],
+                "PLAYING": [
+                    "t7:PLAYING->END",
+                    "t8:PLAYING->END",
+                    "t9:PLAYING->END"
+                ],
+                "ERROR": [
+                    "t10:ERROR->END",
+                    "t11:ERROR->END",
+                    "t12:ERROR->END"
+                ]
+            },
+            "transitions": {
+                "t0:START->AWAIT_LOADING_VIDEO": {
+                    "triggers": [
+                        "new_trial"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGE360DegVideo_OpenFile",
+                                "payload": {
+                                    "ObjectName": "DGE360DegVideo",
+                                    "Function": {
+                                        "FunctionName": "OpenFile",
+                                        "Parameter": {
+                                            "Path": "/data/default.mp4"
+                                        }
+                                    }
+                                },
+                                "payloadSchema": {
+  "type": "object",
+  "properties": {
+    "ObjectName": {
+      "type": "string"
+    },
+    "Function": {
+      "type": "object",
+      "properties": {
+        "FunctionName": {
+          "type": "string"
+        },
+        "Parameter": {
+          "type": "object",
+          "properties": {
+            "Path": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "Path"
+          ]
+        }
+      },
+      "required": [
+        "FunctionName",
+        "Parameter"
+      ]
+    }
+  },
+  "required": [
+    "ObjectName",
+    "Function"
+  ]
+},
+                                "variables": [{
+                                    "path": "Function.Parameter.Path"
+                                }]
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 5,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "AWAIT_LOADING_VIDEO"
+                },
+                "t1:AWAIT_LOADING_VIDEO->END": {
+                    "triggers": [
+                        "DGE360DegVideo_OpenFile_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t2:AWAIT_LOADING_VIDEO->LOADING_VIDEO": {
+                    "triggers": [
+                        "DGE360DegVideo_OpenFile_Success"
+                    ],
+                    "state": "LOADING_VIDEO"
+                },
+                "t3:LOADING_VIDEO->START_PLAY": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 3,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGE360DegVideo_Play",
+                                "payload": {
+                                    "ObjectName": "DGE360DegVideo",
+                                    "Function": {
+                                        "FunctionName": "Play",
+                                        "Parameter": {
+                                            "ExecuteTimeOffset": "00T00:00:02.000"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "START_PLAY"
+                },
+                "t4:START_PLAY->PLAYING": {
+                    "triggers": [
+                        "DGE360DegVideo_Play_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 26,
+                                        "nsec": 0
+                                    }
+                                },
+                                "payloadSchema": {
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "sec": {
+          "type": "integer"
+        },
+        "nsec": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sec",
+        "nsec"
+      ]
+    }
+  },
+  "required": [
+    "value"
+  ]
+},
+                                "variables": [{
+                                    "path": "value.sec"
+                                }, {
+                                    "path": "value.nsec"
+                                }]
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGE360DegVideo_Stop",
+                                "payload": {
+                                    "ObjectName": "DGE360DegVideo",
+                                    "Function": {
+                                        "FunctionName": "Stop",
+                                        "Parameter": {
+                                            "PlaybackTime": "00T00:00:25.000"
+                                        }
+                                    }
+                                },
+                                "payloadSchema": {
+  "type": "object",
+  "properties": {
+    "ObjectName": {
+      "type": "string"
+    },
+    "Function": {
+      "type": "object",
+      "properties": {
+        "FunctionName": {
+          "type": "string"
+        },
+        "Parameter": {
+          "type": "object",
+          "properties": {
+            "PlaybackTime": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "PlaybackTime"
+          ]
+        }
+      },
+      "required": [
+        "FunctionName",
+        "Parameter"
+      ]
+    }
+  },
+  "required": [
+    "ObjectName",
+    "Function"
+  ]
+},
+                                "variables": [{
+                                    "path": "Function.Parameter.PlaybackTime"
+                                }]
+                            }
+                        }
+                    ],
+                    "state": "PLAYING"
+                },
+                "t5:START_PLAY->ERROR": {
+                    "triggers": [
+                        "DGE360DegVideo_Play_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGE360DegVideo_Stop",
+                                "payload": {
+                                    "ObjectName": "DGE360DegVideo",
+                                    "Function": {
+                                        "FunctionName": "Stop",
+                                        "Parameter": {
+                                            "PlaybackTime": "00T00:00:20.000"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR"
+                },
+                "t6:START_PLAY->ERROR": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGE360DegVideo_Stop",
+                                "payload": {
+                                    "ObjectName": "DGE360DegVideo",
+                                    "Function": {
+                                        "FunctionName": "Stop",
+                                        "Parameter": {
+                                            "PlaybackTime": "00T00:00:20.000"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR"
+                },
+                "t7:PLAYING->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t8:PLAYING->END": {
+                    "triggers": [
+                        "DGE360DegVideo_Stop_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t9:PLAYING->END": {
+                    "triggers": [
+                        "DGE360DegVideo_Stop_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "trial_done"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t10:ERROR->END": {
+                    "triggers": [
+                        "DGE360DegVideo_Stop_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t11:ERROR->END": {
+                    "triggers": [
+                        "DGE360DegVideo_Stop_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t12:ERROR->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                }
+            }
+        },
+        "calibrate_gaze": {
+            "states": {
+                "START": [
+                    "t0:START->ENABLE_CLEAR_COLOR"
+                ],
+                "ENABLE_CLEAR_COLOR": [
+                    "t1:ENABLE_CLEAR_COLOR->SET_HEAD_MATERIAL",
+                    "t2:ENABLE_CLEAR_COLOR->END",
+                    "t3:ENABLE_CLEAR_COLOR->END"
+                ],
+                "SET_HEAD_MATERIAL": [
+                    "t4:SET_HEAD_MATERIAL->INIT_HEAD_TARGET",
+                    "t5:SET_HEAD_MATERIAL->END",
+                    "t6:SET_HEAD_MATERIAL->END"
+                ],
+                "END": [],
+                "INIT_HEAD_TARGET": [
+                    "t7:INIT_HEAD_TARGET->ENABLE_HEAD_TARGET",
+                    "t8:INIT_HEAD_TARGET->END",
+                    "t9:INIT_HEAD_TARGET->END"
+                ],
+                "ENABLE_HEAD_TARGET": [
+                    "t10:ENABLE_HEAD_TARGET->HEAD_CALIBRATION",
+                    "t11:ENABLE_HEAD_TARGET->END",
+                    "t12:ENABLE_HEAD_TARGET->END"
+                ],
+                "HEAD_CALIBRATION": [
+                    "t13:HEAD_CALIBRATION->SET_GAZE_MATERIAL"
+                ],
+                "SET_GAZE_MATERIAL": [
+                    "t14:SET_GAZE_MATERIAL->ERROR_GAZE_TARGET",
+                    "t15:SET_GAZE_MATERIAL->ERROR_GAZE_TARGET",
+                    "t16:SET_GAZE_MATERIAL->INIT_GAZE_TARGET"
+                ],
+                "ERROR_GAZE_TARGET": [
+                    "t55:ERROR_GAZE_TARGET->END",
+                    "t56:ERROR_GAZE_TARGET->END",
+                    "t57:ERROR_GAZE_TARGET->END"
+                ],
+                "INIT_GAZE_TARGET": [
+                    "t17:INIT_GAZE_TARGET->INIT_GAZE_CALIBRATION",
+                    "t18:INIT_GAZE_TARGET->ERROR_GAZE_TARGET",
+                    "t19:INIT_GAZE_TARGET->ERROR_GAZE_TARGET"
+                ],
+                "INIT_GAZE_CALIBRATION": [
+                    "t20:INIT_GAZE_CALIBRATION->GAZE_CALIBRATION"
+                ],
+                "GAZE_CALIBRATION": [
+                    "t21:GAZE_CALIBRATION->FIRST_CALIBRATION_READY",
+                    "t22:GAZE_CALIBRATION->ERROR_GAZE_TARGET"
+                ],
+                "FIRST_CALIBRATION_READY": [
+                    "t23:FIRST_CALIBRATION_READY->ERROR_GAZE_TARGET",
+                    "t24:FIRST_CALIBRATION_READY->INIT_VALIDATION_LEFT"
+                ],
+                "INIT_VALIDATION_LEFT": [
+                    "t25:INIT_VALIDATION_LEFT->ERROR_GAZE_TARGET",
+                    "t26:INIT_VALIDATION_LEFT->ERROR_GAZE_TARGET",
+                    "t27:INIT_VALIDATION_LEFT->INIT_VALIDATION_RIGHT"
+                ],
+                "INIT_VALIDATION_RIGHT": [
+                    "t28:INIT_VALIDATION_RIGHT->ERROR_GAZE_TARGET",
+                    "t29:INIT_VALIDATION_RIGHT->ERROR_GAZE_TARGET",
+                    "t30:INIT_VALIDATION_RIGHT->VALIDATION_WAIT"
+                ],
+                "VALIDATION_WAIT": [
+                    "t31:VALIDATION_WAIT->ABORT_VALIDATION_LEFT",
+                    "t32:VALIDATION_WAIT->RESET_CALIBRATION_LEFT",
+                    "t33:VALIDATION_WAIT->VALIDATION_LEFT"
+                ],
+                "ABORT_VALIDATION_LEFT": [
+                    "t49:ABORT_VALIDATION_LEFT->END",
+                    "t50:ABORT_VALIDATION_LEFT->END",
+                    "t51:ABORT_VALIDATION_LEFT->ABORT_VALIDATION_RIGHT"
+                ],
+                "RESET_CALIBRATION_LEFT": [
+                    "t43:RESET_CALIBRATION_LEFT->ERROR_GAZE_TARGET",
+                    "t44:RESET_CALIBRATION_LEFT->ERROR_GAZE_TARGET",
+                    "t45:RESET_CALIBRATION_LEFT->RESET_CALIBRATION_RIGHT"
+                ],
+                "VALIDATION_LEFT": [
+                    "t34:VALIDATION_LEFT->END",
+                    "t35:VALIDATION_LEFT->END",
+                    "t36:VALIDATION_LEFT->VALIDATION_RIGHT"
+                ],
+                "VALIDATION_RIGHT": [
+                    "t37:VALIDATION_RIGHT->END",
+                    "t38:VALIDATION_RIGHT->END",
+                    "t39:VALIDATION_RIGHT->VALIDATION_DONE"
+                ],
+                "VALIDATION_DONE": [
+                    "t40:VALIDATION_DONE->END",
+                    "t41:VALIDATION_DONE->END",
+                    "t42:VALIDATION_DONE->END"
+                ],
+                "RESET_CALIBRATION_RIGHT": [
+                    "t46:RESET_CALIBRATION_RIGHT->ERROR_GAZE_TARGET",
+                    "t47:RESET_CALIBRATION_RIGHT->ERROR_GAZE_TARGET",
+                    "t48:RESET_CALIBRATION_RIGHT->SET_GAZE_MATERIAL"
+                ],
+                "ABORT_VALIDATION_RIGHT": [
+                    "t52:ABORT_VALIDATION_RIGHT->END",
+                    "t53:ABORT_VALIDATION_RIGHT->END",
+                    "t54:ABORT_VALIDATION_RIGHT->ERROR_GAZE_TARGET"
+                ]
+            },
+            "transitions": {
+                "t0:START->ENABLE_CLEAR_COLOR": {
+                    "triggers": [
+                        "new_trial"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEClearColor_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEClearColor",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ENABLE_CLEAR_COLOR"
+                },
+                "t1:ENABLE_CLEAR_COLOR->SET_HEAD_MATERIAL": {
+                    "triggers": [
+                        "DGEClearColor_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetMaterial",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetMaterial",
+                                        "Parameter": {
+                                            "Material": "CrossRed"
+                                        }
+                                    }
+                                },
+                                "payloadSchema": {
+  "type": "object",
+  "properties": {
+    "ObjectName": {
+      "type": "string"
+    },
+    "Function": {
+      "type": "object",
+      "properties": {
+        "FunctionName": {
+          "type": "string"
+        },
+        "Parameter": {
+          "type": "object",
+          "properties": {
+            "Material": {
+              "enum": ["CrossRed", "CrossBlack"]
+            }
+          },
+          "required": [
+            "Material"
+          ]
+        }
+      },
+      "required": [
+        "FunctionName",
+        "Parameter"
+      ]
+    }
+  },
+  "required": [
+    "ObjectName",
+    "Function"
+  ]
+},
+                                "variables": [{
+                                    "path": "Function.Parameter.Material"
+                                }]
+                            }
+                        }
+                    ],
+                    "state": "SET_HEAD_MATERIAL"
+                },
+                "t2:ENABLE_CLEAR_COLOR->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t3:ENABLE_CLEAR_COLOR->END": {
+                    "triggers": [
+                        "DGEClearColor_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t4:SET_HEAD_MATERIAL->INIT_HEAD_TARGET": {
+                    "triggers": [
+                        "DGEShapeTarget_SetMaterial_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetScale",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetScale",
+                                        "Parameter": {
+                                            "Scale": {
+                                                "X": 0.2,
+                                                "Y": 0.2,
+                                                "Z": 0.2
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "INIT_HEAD_TARGET"
+                },
+                "t5:SET_HEAD_MATERIAL->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t6:SET_HEAD_MATERIAL->END": {
+                    "triggers": [
+                        "DGEShapeTarget_SetMaterial_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t7:INIT_HEAD_TARGET->ENABLE_HEAD_TARGET": {
+                    "triggers": [
+                        "DGEShapeTarget_SetScale_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ENABLE_HEAD_TARGET"
+                },
+                "t8:INIT_HEAD_TARGET->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t9:INIT_HEAD_TARGET->END": {
+                    "triggers": [
+                        "DGEShapeTarget_SetScale_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t10:ENABLE_HEAD_TARGET->HEAD_CALIBRATION": {
+                    "triggers": [
+                        "DGEShapeTarget_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_head",
+                            "new": {
+                                "name": "smx_prc_project.set.state",
+                                "payload": {
+                                    "direction_type": "x",
+                                    "hit_type": "intersection",
+                                    "rotation_type": "normal",
+                                    "ray_deviation": {
+                                        "qx": 0.0,
+                                        "qy": 0.0,
+                                        "qz": 0.0,
+                                        "qw": 1.0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_head",
+                            "new": {
+                                "name": "smx_prc_project.set.enable_stream"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_show",
+                                "payload": {
+                                    "name": "custom-widget",
+                                    "data": {
+                                        "title": "Reset Head Orientation",
+                                        "msg": "Once the subject is oriented towards the front wall reset the head orientation with the Motion software. Then continue by clicking 'Done'."
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "HEAD_CALIBRATION"
+                },
+                "t11:ENABLE_HEAD_TARGET->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t12:ENABLE_HEAD_TARGET->END": {
+                    "triggers": [
+                        "DGEShapeTarget_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t13:HEAD_CALIBRATION->SET_GAZE_MATERIAL": {
+                    "triggers": [
+                        "widget.custom-widget_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_head",
+                            "new": {
+                                "name": "smx_prc_project.set.disable_stream"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_hide",
+                                "payload": {
+                                    "name": "custom-widget"
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetMaterial",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetMaterial",
+                                        "Parameter": {
+                                            "Material": "PointRed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "SET_GAZE_MATERIAL"
+                },
+                "t14:SET_GAZE_MATERIAL->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t15:SET_GAZE_MATERIAL->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEShapeTarget_SetMaterial_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t16:SET_GAZE_MATERIAL->INIT_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEShapeTarget_SetMaterial_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetTransform",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetTransform",
+                                        "Parameter": {
+                                            "Location": {
+                                                "X": -0.01,
+                                                "Y": -3.0,
+                                                "Z": 1.8
+                                            },
+                                            "Rotation": {
+                                                "X": 0.0,
+                                                "Y": 0.0,
+                                                "Z": 0.0
+                                            },
+                                            "Scale": {
+                                                "X": 0.05,
+                                                "Y": 0.05,
+                                                "Z": 0.05
+                                            }
+                                        }
+                                    }
+                                },
+                                "payloadSchema": {
+  "type": "object",
+  "properties": {
+    "ObjectName": {
+      "type": "string"
+    },
+    "Function": {
+      "type": "object",
+      "properties": {
+        "FunctionName": {
+          "type": "string"
+        },
+        "Parameter": {
+          "type": "object",
+          "properties": {
+            "Location": {
+              "type": "object",
+              "properties": {
+                "X": {
+                  "type": "number"
+                },
+                "Y": {
+                  "type": "number"
+                },
+                "Z": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "X",
+                "Y",
+                "Z"
+              ]
+            },
+            "Rotation": {
+              "type": "object",
+              "properties": {
+                "X": {
+                  "type": "number"
+                },
+                "Y": {
+                  "type": "number"
+                },
+                "Z": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "X",
+                "Y",
+                "Z"
+              ]
+            },
+            "Scale": {
+              "type": "object",
+              "properties": {
+                "X": {
+                  "type": "number"
+                },
+                "Y": {
+                  "type": "number"
+                },
+                "Z": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "X",
+                "Y",
+                "Z"
+              ]
+            }
+          },
+          "required": [
+            "Location",
+            "Rotation",
+            "Scale"
+          ]
+        }
+      },
+      "required": [
+        "FunctionName",
+        "Parameter"
+      ]
+    }
+  },
+  "required": [
+    "ObjectName",
+    "Function"
+  ]
+},
+                                "variables": [{
+                                    "path": "Function.Parameter"
+                                }]
+                            }
+                        }
+                    ],
+                    "state": "INIT_GAZE_TARGET"
+                },
+                "t17:INIT_GAZE_TARGET->INIT_GAZE_CALIBRATION": {
+                    "triggers": [
+                        "DGEShapeTarget_SetTransform_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_gaze",
+                            "new": {
+                                "name": "set_target_location",
+                                "payload": {
+                                    "target_t_lab": {
+                                        "x": 0.1,
+                                        "y": 0.1,
+                                        "z": 0.1
+                                    }
+                                },
+                                "payload_map": [
+                                    {
+                                        "src": "DGEEvent.payload.Function.Parameter.Location.X",
+                                        "tgt": "target_t_lab.x"
+                                    },
+                                    {
+                                        "src": "DGEEvent.payload.Function.Parameter.Location.Y",
+                                        "tgt": "target_t_lab.y"
+                                    },
+                                    {
+                                        "src": "DGEEvent.payload.Function.Parameter.Location.Z",
+                                        "tgt": "target_t_lab.z"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_show",
+                                "payload": {
+                                    "name": "custom-widget",
+                                    "data": {
+                                        "title": "Gaze Calibration",
+                                        "msg": "Ask the subject to fixate the target displayed on the front wall. Then continue by clicking 'Done'."
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "INIT_GAZE_CALIBRATION"
+                },
+                "t18:INIT_GAZE_TARGET->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t19:INIT_GAZE_TARGET->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEShapeTarget_SetTransform_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t20:INIT_GAZE_CALIBRATION->GAZE_CALIBRATION": {
+                    "triggers": [
+                        "widget.custom-widget_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_gaze",
+                            "new": {
+                                "name": "gaze_calibration_start"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_hide",
+                                "payload": {
+                                    "name": "custom-widget"
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_show",
+                                "payload": {
+                                    "name": "gaze_calibration-static"
+                                }
+                            }
+                        }
+                    ],
+                    "state": "GAZE_CALIBRATION"
+                },
+                "t21:GAZE_CALIBRATION->FIRST_CALIBRATION_READY": {
+                    "triggers": [
+                        "gaze_calibration_done"
+                    ],
+                    "state": "FIRST_CALIBRATION_READY"
+                },
+                "t22:GAZE_CALIBRATION->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "widget.gaze_calibration_abort"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_gaze",
+                            "new": {
+                                "name": "gaze_calibration_stop"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_hide",
+                                "payload": {
+                                    "name": "gaze_calibration-static"
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t23:FIRST_CALIBRATION_READY->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "widget.gaze_calibration_abort"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_gaze",
+                            "new": {
+                                "name": "gaze_calibration_stop"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_hide",
+                                "payload": {
+                                    "name": "gaze_calibration-static"
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t24:FIRST_CALIBRATION_READY->INIT_VALIDATION_LEFT": {
+                    "triggers": [
+                        "gaze_calibration_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayLeft_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayLeft",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ui"
+                        }
+                    ],
+                    "state": "INIT_VALIDATION_LEFT"
+                },
+                "t25:INIT_VALIDATION_LEFT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t26:INIT_VALIDATION_LEFT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t27:INIT_VALIDATION_LEFT->INIT_VALIDATION_RIGHT": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayRight_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayRight",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "INIT_VALIDATION_RIGHT"
+                },
+                "t28:INIT_VALIDATION_RIGHT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t29:INIT_VALIDATION_RIGHT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t30:INIT_VALIDATION_RIGHT->VALIDATION_WAIT": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        }
+                    ],
+                    "state": "VALIDATION_WAIT"
+                },
+                "t31:VALIDATION_WAIT->ABORT_VALIDATION_LEFT": {
+                    "triggers": [
+                        "widget.gaze_calibration_abort"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_gaze",
+                            "new": {
+                                "name": "gaze_calibration_stop"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_hide",
+                                "payload": {
+                                    "name": "gaze_calibration-static"
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayLeft_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayLeft",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ABORT_VALIDATION_LEFT"
+                },
+                "t32:VALIDATION_WAIT->RESET_CALIBRATION_LEFT": {
+                    "triggers": [
+                        "widget.gaze_calibration_restart"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayLeft_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayLeft",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "RESET_CALIBRATION_LEFT"
+                },
+                "t33:VALIDATION_WAIT->VALIDATION_LEFT": {
+                    "triggers": [
+                        "widget.gaze_calibration_success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayLeft_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayLeft",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ui",
+                            "new": {
+                                "name": "widget_hide",
+                                "payload": {
+                                    "name": "gaze_calibration-static"
+                                }
+                            }
+                        }
+                    ],
+                    "state": "VALIDATION_LEFT"
+                },
+                "t34:VALIDATION_LEFT->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t35:VALIDATION_LEFT->END": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t36:VALIDATION_LEFT->VALIDATION_RIGHT": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayRight_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayRight",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "VALIDATION_RIGHT"
+                },
+                "t37:VALIDATION_RIGHT->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t38:VALIDATION_RIGHT->END": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t39:VALIDATION_RIGHT->VALIDATION_DONE": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "VALIDATION_DONE"
+                },
+                "t40:VALIDATION_DONE->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t41:VALIDATION_DONE->END": {
+                    "triggers": [
+                        "DGEShapeTarget_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t42:VALIDATION_DONE->END": {
+                    "triggers": [
+                        "DGEShapeTarget_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "trial_done"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t43:RESET_CALIBRATION_LEFT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t44:RESET_CALIBRATION_LEFT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t45:RESET_CALIBRATION_LEFT->RESET_CALIBRATION_RIGHT": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayRight_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayRight",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "RESET_CALIBRATION_RIGHT"
+                },
+                "t46:RESET_CALIBRATION_RIGHT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t47:RESET_CALIBRATION_RIGHT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t48:RESET_CALIBRATION_RIGHT->SET_GAZE_MATERIAL": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetMaterial",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetMaterial",
+                                        "Parameter": {
+                                            "Material": "PointRed"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "SET_GAZE_MATERIAL"
+                },
+                "t49:ABORT_VALIDATION_LEFT->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t50:ABORT_VALIDATION_LEFT->END": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t51:ABORT_VALIDATION_LEFT->ABORT_VALIDATION_RIGHT": {
+                    "triggers": [
+                        "DGEGazeRayLeft_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEGazeRayRight_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEGazeRayRight",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ABORT_VALIDATION_RIGHT"
+                },
+                "t52:ABORT_VALIDATION_RIGHT->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t53:ABORT_VALIDATION_RIGHT->END": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t54:ABORT_VALIDATION_RIGHT->ERROR_GAZE_TARGET": {
+                    "triggers": [
+                        "DGEGazeRayRight_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "arm_timer",
+                                "payload": {
+                                    "value": {
+                                        "sec": 1,
+                                        "nsec": 0
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "port": "trigger_ue",
+                            "new": {
+                                "name": "DGEShapeTarget_SetVisibility",
+                                "payload": {
+                                    "ObjectName": "DGEShapeTarget",
+                                    "Function": {
+                                        "FunctionName": "SetVisibility",
+                                        "Parameter": {
+                                            "Visibility": false
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                    "state": "ERROR_GAZE_TARGET"
+                },
+                "t55:ERROR_GAZE_TARGET->END": {
+                    "triggers": [
+                        "timer_done"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t56:ERROR_GAZE_TARGET->END": {
+                    "triggers": [
+                        "DGEShapeTarget_SetVisibility_Error"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                },
+                "t57:ERROR_GAZE_TARGET->END": {
+                    "triggers": [
+                        "DGEShapeTarget_SetVisibility_Success"
+                    ],
+                    "events": [
+                        {
+                            "port": "trigger_timer",
+                            "new": {
+                                "name": "disarm_timer"
+                            }
+                        },
+                        {
+                            "port": "trigger_ui_ctrl",
+                            "new": {
+                                "name": "abort_trial"
+                            }
+                        }
+                    ],
+                    "state": "END"
+                }
+            }
+        }
+    }
+}

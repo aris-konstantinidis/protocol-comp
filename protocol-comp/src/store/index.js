@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex, {
   Store
 } from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 import subjectsSchema from '../jsonSchemas/subjects.schema.json'
 import jsen from 'jsen'
 var validate = jsen(subjectsSchema)
@@ -289,8 +289,9 @@ export default new Vuex.Store({
   },
   actions: {
     GET_FSMS({commit}) {
-      axios.get('fsms').then((res) => {
-        const fsms = res.data.fsms
+      // axios.get('fsms').then((res) => {
+        // const fsms = res.data.fsms
+        const { fsms } = require("../inputs/fsms.json")
         for (var fsm in fsms) {
           for (var transition in fsms[fsm].transitions) {
             for (var event in fsms[fsm].transitions[transition].events) {
@@ -298,9 +299,7 @@ export default new Vuex.Store({
                 if (fsms[fsm].transitions[transition].events[event].new.variables) {
                   var newFsmVars = new FsmVars(fsm, fsms[fsm].transitions[transition].events[event].new.payload, fsms[fsm].transitions[transition].events[event].new.payloadSchema)
                   for (var variable in fsms[fsm].transitions[transition].events[event].new.variables) {
-                    const {
-                      path
-                    } = fsms[fsm].transitions[transition].events[event].new.variables[variable]
+                    const { path } = fsms[fsm].transitions[transition].events[event].new.variables[variable]
                     var newVar = new Var(fsm, transition, event, variable, path)
                     newFsmVars.vars.push(newVar)
                   }
@@ -309,18 +308,19 @@ export default new Vuex.Store({
               }
             }
           }
-          commit("SET_FSMS", new Fsm(fsm, res.data.fsms[fsm]))
+          commit("SET_FSMS", new Fsm(fsm, fsms[fsm]))
         }
-      })
+      // })
     },
     GET_PROTOCOLS({state, commit}) {
-      axios.get('protocols').then((res) => {
-        const protocols = res.data.protocols
+      // axios.get('protocols').then((res) => {
+        // const protocols = res.data.protocols
+        const { protocols } = require("../inputs/protocols.json")
         for (var protocol in protocols) {
           var newProtocol = new Protocol(protocols[protocol].id, protocols[protocol].name, protocols[protocol].subjects)
           commit("SET_PROTOCOLS", newProtocol)
         }
-      })
+      // })
     }
   }
 })

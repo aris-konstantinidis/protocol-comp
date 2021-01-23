@@ -13,9 +13,10 @@
     "jsen": "^0.6.6",
     "vue": "^2.6.11",
     "vue-json-viewer": "^2.2.16",
+    "vue2-ace-editor": "0.0.15",
     "vuedraggable": "^2.24.3",
-    "vuex": "^3.4.0",
-    "vue2-ace-editor": "0.0.15"
+    "vuelayers": "^0.11.30",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
