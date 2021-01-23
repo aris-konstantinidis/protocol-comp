@@ -1,6 +1,8 @@
 class BlockDef {
-    constructor(name) {
-        this.name = name
+    static counter = 0
+    constructor() {
+        this.name = "bd" + BlockDef.counter
+        BlockDef.counter++
         this.items = []
         this.hasInstances = false
     }
@@ -14,8 +16,10 @@ class BlockDef {
     }
 }
 class ParBlockDef {
-  constructor(name) {
-    this.name = name
+  static counter = 0
+  constructor() {
+    this.name = "pbd" + ParBlockDef.counter
+    ParBlockDef.counter++
     this.items = []
     this.hasInstances = false
   }

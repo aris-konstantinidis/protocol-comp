@@ -10,11 +10,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Change name">
           </div>
-        </form>
         <div v-if="!validName" class="alert alert-warning" role="alert">
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
         </div>
