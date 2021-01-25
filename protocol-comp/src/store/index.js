@@ -43,6 +43,51 @@ export default new Vuex.Store({
     logs: [],
   },
   mutations: {
+    RETRIEVE_STATE(state) {
+      const bs = JSON.parse(localStorage.getItem("blockdefs"))
+      bs.forEach((blockdef) => {
+        var newbs = new BlockDef()
+        newbs.name = blockdef.name
+        newbs.addItems(blockdef.items)
+        newbs.hasInstances = blockdef.hasInstances
+        state.blockDefs.push(newbs)
+      })
+      const pbs = JSON.parse(localStorage.getItem("parBlockDefs"))
+      pbs.forEach((blockdef) => {
+        var newpbs = new ParBlockDef()
+        newpbs.name = blockdef.name
+        newpbs.addItems(blockdef.items)
+        newpbs.hasInstances = blockdef.hasInstances
+        state.parBlockDefs.push(newpbs)
+      })
+      const ps = JSON.parse(localStorage.getItem("protocols"))
+      ps.forEach((blockdef) => {
+        var newps = new Protocol()
+        newps.id = Number(blockdef.id)
+        newps.name = blockdef.name
+        newps.subjects = blockdef.subjects
+        newps.addItems(blockdef.items)
+        state.protocols.push(newps)
+      })
+      state.protocols = JSON.parse(localStorage.getItem("protocols"))
+      state.names = JSON.parse(localStorage.getItem("names"))
+      state.subjectsJSON = JSON.parse(localStorage.getItem("subjectsJSON"))
+    },
+    SAVE_STATE(state) {
+      localStorage.setItem("blockdefs", JSON.stringify(state.blockDefs))
+      localStorage.setItem("parBlockDefs", JSON.stringify(state.parBlockDefs))
+      localStorage.setItem("protocols", JSON.stringify(state.protocols))
+      localStorage.setItem("names", JSON.stringify(state.names))
+      localStorage.setItem("subjectsJSON", JSON.stringify(state.subjectsJSON))
+    },
+    CLEAR_STATE(state) {
+      state.blockDefs = []
+      state.parBlockDefs = []
+      state.protocols = []
+      state.names = []
+      state.subjectsJSON = []
+      localStorage.clear()
+    },
     OVERRIDE_DRAFT(state, final) {
       state.subjectsJSON = final
     },

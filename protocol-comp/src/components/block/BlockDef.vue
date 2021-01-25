@@ -1,23 +1,25 @@
 <template>
-  <div class="fsmDropZone card shadow-sm">
+  <div class="card shadow-sm">
     <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-success">Block Definition</span> <span v-if="def.hasInstances" class='badge badge-light'>has instances</span> <button @click="deleteBlockDef(def)" type="button" class="close">
         <span class="text-light" aria-hidden="true">&times;</span>
       </button></h5>
     <div class="card-body">
-      <div class="collapse" :id="def.name">
-        <draggable v-model="def.items">
-          <draggable :id="def.name" :list="def.items" group="fsms" @end="notify">
-            <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
-              <div class="alert alert-info shadow-sm alert-dismissible fade show" role="alert">
-                <strong class="font-weight-bold">{{item.name}} <span class="badge badge-dark">Trial Instance</span> <span class="badge badge-info">{{item.fsm_tpl.id}}</span></strong>
-                <button @click='deleteTrialInst(index)' data-toggle="modal" data-target="#confirmDelete" :key='item.name' type="button" class="close" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-            </div>
-          </draggable>
-        </draggable>
-      </div>
+        <div class="collapse" :id="def.name">
+          <div class="fsmDropZone wrapper p-2 mb-3">
+            <draggable v-model="def.items" style="min-height: 20px;">
+              <draggable :id="def.name" :list="def.items" group="fsms" @end="notify">
+                <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
+                  <div class="alert alert-info shadow-sm alert-dismissible fade show" role="alert">
+                    <strong class="font-weight-bold">{{item.name}} <span class="badge badge-dark">Trial Instance</span> <span class="badge badge-info">{{item.fsm_tpl.id}}</span></strong>
+                    <button @click='deleteTrialInst(index)' data-toggle="modal" data-target="#confirmDelete" :key='item.name' type="button" class="close" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+              </draggable>
+            </draggable>
+          </div>
+        </div>
       <p class="card-text">
         <button @mousedown="removeException" type="button" class="handle btn btn-sm btn-light float-right ml-2">Drag</button>
         <button @click="open = false" v-if="open === true" class="btn btn-sm btn-warning float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Hide</button>

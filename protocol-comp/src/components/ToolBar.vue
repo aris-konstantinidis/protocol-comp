@@ -9,8 +9,14 @@
         <button @click="newBlockDef" type="button" class="btn btn-sm btn-success mr-2">New BlockDef</button>
       </li>
       <li class="nav-item">
-        <button @click="newParBlockDef" type="button" class="btn btn-sm btn-success mr-5">New ParBlockDef</button>
+        <button @click="newParBlockDef" type="button" class="btn btn-sm btn-success mr-2">New ParBlockDef</button>
       </li>
+      <!-- <li class="nav-item">
+        <button @click="save" type="button" class="btn btn-sm btn-primary mr-2">Save</button>
+      </li>
+      <li class="nav-item">
+        <button @click="clear" type="button" class="btn btn-sm btn-secondary mr-5">Clear</button>
+      </li> -->
       <li class="nav-item" v-if="transfer.parent">
         <a class="nav-link mr-5">Transfered <span class="badge badge-light">{{transfer.child}}</span> to <span class="badge badge-light">{{transfer.parent}}</span> at index <span class="badge badge-light">{{transfer.index}}</span></span></a>
       </li>
@@ -50,6 +56,12 @@ export default {
     }
   },
   methods: {
+    save() {
+      this.$store.commit("SAVE_STATE")
+    },
+    clear() {
+      this.$store.commit("CLEAR_STATE")
+    },
     switchView() {
       this.$store.commit("SET_EDIT")
     },

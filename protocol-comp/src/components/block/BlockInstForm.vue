@@ -10,18 +10,17 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Name">
+            <small v-if="!valid" class="small text-danger">Name is required</small>
           </div>
-        </form>
         <div v-if="!validName" class="alert alert-warning" role="alert">
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
         </div>
       </div>
       <div class="modal-footer border-white">
         <button type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newBlockInstance()" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button @click="newBlockInstance()" type="button" class="btn btn-sm btn-primary shadow-sm">Submit</button>
       </div>
     </div>
   </div>
@@ -46,22 +45,30 @@ export default {
   },
   data() {
     return {
+      valid: true,
       name: ''
     }
   },
   methods: {
     checkNameValidity() {
+      this.valid = true
       this.$store.commit('CHECK_NAME', this.name)
     },
     newBlockInstance() {
+      if (this.name == "") {
+        this.valid = false
+        return
+      }
       // add to parentBlock or to protocol
-      if (this.name == "") return false
+
       if (this.targetProtocol) {
         this.$store.commit('ADD_ITEM', { action: "BTPR", origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
       } else if (!this.targetProtocol) {
         this.$store.commit('ADD_ITEM', { action: "BTP", origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
       }
       this.name = ''
+      $("#blockInstForm .close").click();
+
     }
   }
 }

@@ -26,6 +26,10 @@ export default {
   created() {
     this.$store.dispatch('GET_FSMS')
     this.$store.dispatch("GET_PROTOCOLS")
+    // if (localStorage.getItem("protocols") === null) {
+    // } else {
+    //   this.$store.commit("RETRIEVE_STATE")
+    // }
   }
 }
 </script>

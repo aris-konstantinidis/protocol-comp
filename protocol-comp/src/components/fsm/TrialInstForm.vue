@@ -10,9 +10,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Name">
+            <small v-if="!valid" class="small text-danger">Name is required</small>
           </div>
           <div v-if="!validName" class="alert alert-warning" role="alert">
             Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
@@ -32,11 +32,10 @@
               <AceEditor :key="forceRerender" :schema="fsmVar.schema" :payload="JSON.parse(JSON.stringify(fsmVar.payload))" :id="JSON.parse(JSON.stringify(fsmVar.id))"/>
             </div>
           </div>
-        </form>
       </div>
       <div class="modal-footer border-white">
         <button type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newTrialInstance(def.name)" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button @click="newTrialInstance(def.name)" type="button" class="btn btn-sm btn-primary shadow-sm" :data-dismiss="valid">Submit</button>
         <button ref="openAskUpdateBlockDefChildren" style="display: none;" data-toggle="modal" data-target="#askUpdateBlockDefChildren"></button>
       </div>
     </div>
@@ -81,6 +80,7 @@ export default {
   },
   data() {
     return {
+      valid: true,
       forceRerender: 0,
       name: '',
       description: '',
@@ -93,6 +93,7 @@ export default {
   },
   methods: {
     checkNameValidity() {
+      this.valid = true
       this.$store.commit('CHECK_NAME', this.name)
     },
     getValue(obj, path) { // extract variables from payload objects
@@ -103,8 +104,12 @@ export default {
           }, obj)
     },
     newTrialInstance(name) {
-      if (this.name == "") return false
+      if (this.name == "") {
+        this.valid = false
+        return
+      }
       // try {
+        this.valid = "modal"
         this.fsm_tpl.id = this.transfer.child
 
         for (var fsmVar in this.fsmVars) {
@@ -142,6 +147,8 @@ export default {
         if (this.mutatedElement.hasInstances) {
           this.$refs['openAskUpdateBlockDefChildren'].click()
         }
+        $("#newTrialInstForm .close").click();
+        
       // } catch (error) {
       //   this.$store.commit("LOG_ERROR", error)
       // }

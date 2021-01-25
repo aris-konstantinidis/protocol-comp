@@ -1,8 +1,9 @@
 <template>
-<div class="parBlockDefDropZone card shadow-sm">
+<div class="card shadow-sm">
   <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-secondary">Protocol Template</span> <span class="badge badge-info">{{def.subjects.length}} subjects</span></h5>
   <div class="card-body">
-    <draggable class="dragArea" :id="def.name" :list="def.items" :group="activeList">
+    <div class="parBlockDefDropZone wrapper p-2 mb-3">
+    <draggable class="dragArea" :id="def.name" :list="def.items" :group="activeList" style="min-height: 20px;">
       <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
         <div class="alert alert-primary shadow-sm alert-dismissible fade show" role="alert">
           <strong class="font-weight-bold">{{item.name}} <span class="badge badge-dark">Block Instance</span> <span class="badge badge-primary">{{item.ref}}</span></strong>
@@ -12,6 +13,7 @@
         </div>
       </div>
     </draggable>
+  </div>
     <p class="card-text">
       <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-sm btn-secondary float-right">JSON</button>
     </p>

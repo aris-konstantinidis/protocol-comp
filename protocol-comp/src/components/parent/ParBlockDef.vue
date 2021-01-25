@@ -1,11 +1,12 @@
 <template>
-  <div class="blockDefDropZone card shadow-sm">
+  <div class="card shadow-sm">
     <h5 class="card-header bg-dark font-weight-bold text-light">{{def.name}} <span class="badge badge-primary">Parent-Block Definition</span> <span v-if="def.hasInstances" class='badge badge-light'>has instances</span> <button @click="deleteParBlockDef(def)" type="button" class="close">
         <span class="text-light" aria-hidden="true">&times;</span>
       </button></h5>
     <div class="card-body">
       <div class="collapse" :id="def.name">
-        <draggable group="nested" :id="def.name">
+        <div class="blockDefDropZone wrapper p-2 mb-3">
+        <draggable group="nested" :id="def.name" style="min-height: 20px;">
           <draggable class="dragArea" :id="def.name" :list="def.items" :group="activeList" @end="notify">
             <div class="sortable" v-for="(item, index) in def.items" :key="item.name">
               <div class="alert alert-success shadow-sm alert-dismissible fade show" role="alert">
@@ -17,6 +18,7 @@
             </div>
           </draggable>
         </draggable>
+      </div>
       </div>
       <p class="card-text">
         <button @mousedown="raiseException(def)" type="button" class="handle btn-sm btn btn-light float-right ml-2">Drag</button>

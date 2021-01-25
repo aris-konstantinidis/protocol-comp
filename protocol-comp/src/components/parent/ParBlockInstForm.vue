@@ -9,18 +9,17 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Name">
+            <small v-if="!valid" class="small text-danger">Name is required</small>
           </div>
-        </form>
         <div v-if="!validName" class="alert alert-warning" role="alert">
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
         </div>
       </div>
       <div class="modal-footer border-white">
         <button @click="removeException" type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newParBlockInst()" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button @click="newParBlockInst()" type="button" class="btn btn-sm btn-primary shadow-sm">Submit</button>
       </div>
     </div>
   </div>
@@ -45,6 +44,7 @@ export default {
   },
   data() {
     return {
+      valid: true,
       name: ''
     }
   },
@@ -53,10 +53,14 @@ export default {
       this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
     },
     checkNameValidity() {
+      this.valid = true
       this.$store.commit('CHECK_NAME', this.name)
     },
     newParBlockInst() {
-      if (this.name == "") return false
+      if (this.name == "") {
+          this.valid = false
+          return
+      }
       if (this.transferChildException) {
         this.$store.commit('ADD_ITEM', { action: 'PRTPR', origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
       } else {
@@ -65,6 +69,7 @@ export default {
       }
       this.$store.commit('TRANSFER_CHILD_EXCEPTION', null)
       this.name = ''
+      $("#newParBlockInst .close").click();
     }
   }
 }
