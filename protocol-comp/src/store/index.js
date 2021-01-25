@@ -261,8 +261,8 @@ export default new Vuex.Store({
     SET_DATA_TO_PREVIEW(state, data) {
       state.dataToPreview = data
     },
-    NEW_DEF(state, { ofClass }) {
-      ofClass === "BlockDef" ? state.blockDefs.push(new BlockDef()) : state.parBlockDefs.push(new ParBlockDef())
+    NEW_DEF(state, { name, ofClass }) {
+      ofClass === "BlockDef" ? state.blockDefs.push(new BlockDef(name)) : state.parBlockDefs.push(new ParBlockDef(name))
       state.names.push(name)
       this.commit("EXPORT_CONFIGURATION")
     },

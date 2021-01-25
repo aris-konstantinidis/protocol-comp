@@ -6,10 +6,10 @@
   <div class="collapse navbar-collapse" id="navbarText">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <button @click="newBlockDef" type="button" class="btn btn-sm btn-success mr-2">New BlockDef</button>
+        <button type="button" data-toggle="modal" data-target="#newBlockDefInstForm" class="btn btn-sm btn-success mr-2">New BlockDef</button>
       </li>
       <li class="nav-item">
-        <button @click="newParBlockDef" type="button" class="btn btn-sm btn-success mr-2">New ParBlockDef</button>
+        <button type="button" data-toggle="modal" data-target="#newParBlockDefInstForm" class="btn btn-sm btn-success mr-2">New ParBlockDef</button>
       </li>
       <!-- <li class="nav-item">
         <button @click="save" type="button" class="btn btn-sm btn-primary mr-2">Save</button>
@@ -65,12 +65,12 @@ export default {
     switchView() {
       this.$store.commit("SET_EDIT")
     },
-    newBlockDef() {
-      this.$store.commit('NEW_DEF', { ofClass: 'BlockDef'})
-    },
-    newParBlockDef() {
-      this.$store.commit('NEW_DEF', { ofClass: 'ParBlockDef'})
-    }
+    // newBlockDef() {
+    //   this.$store.commit('NEW_DEF', { name: this.name, ofClass: 'BlockDef'})
+    // },
+    // newParBlockDef() {
+    //   this.$store.commit('NEW_DEF', { name: this.name, ofClass: 'ParBlockDef'})
+    // }
   }
 }
 </script>

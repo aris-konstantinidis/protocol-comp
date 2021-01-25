@@ -25,7 +25,7 @@
         <button @click="open = false" v-if="open === true" class="btn btn-sm btn-warning float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Hide</button>
         <button @click="open = true" v-if="open === false" class="btn btn-sm btn-primary float-right ml-2" type="button" data-toggle="collapse" :data-target="'#'+def.name">Edit</button>
         <button @click="preview(def)" data-target="#previewModal" data-toggle="modal" class="btn btn-sm btn-secondary float-right">JSON</button>
-        <button @click='setParBlockDef' type="button" class="btn btn-sm btn-info float-right mr-2">Duplicate</button>
+        <button @click='setParBlockDef' data-toggle="modal" data-target="#duplicateParBlockDef" type="button" class="btn btn-sm btn-info float-right mr-2">Duplicate</button>
       </p>
     </div>
     <DuplParBlockDefForm :def='def' />
@@ -71,11 +71,11 @@ export default {
       }
     },
     setParBlockDef() {
-      var items = []
-      for (var i = 0; i < this.def.items.length; i++) {
-        items.push(this.def.items[i])
-      }
-      this.$store.commit('DUPL_DEF', { items: items, ofClass: this.def.constructor.name })
+      // var items = []
+      // for (var i = 0; i < this.def.items.length; i++) {
+      //   items.push(this.def.items[i])
+      // }
+      // this.$store.commit('DUPL_DEF', { items: items, ofClass: this.def.constructor.name })
       this.$store.commit('SET_ACTIVE_DEF', this.def)
     },
     preview() {
