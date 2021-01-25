@@ -1,7 +1,8 @@
 class BlockDef {
     // static counter = 0
     constructor(name) {
-        this.name = name.trim()
+
+        this.name = (name.trim()).replace(/\s+/g, '-')
         // BlockDef.counter++
         this.items = []
         this.hasInstances = false
@@ -18,7 +19,7 @@ class BlockDef {
 class ParBlockDef {
   // static counter = 0
   constructor(name) {
-    this.name = name.trim()
+    this.name = (name.trim()).replace(/\s+/g, '-')
     // ParBlockDef.counter++
     this.items = []
     this.hasInstances = false
