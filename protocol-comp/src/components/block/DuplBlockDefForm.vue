@@ -12,6 +12,7 @@
       <div class="modal-body">
           <div class="form-group">
             <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Change name">
+            <small v-if="!valid" class="small text-danger">Name can not be empty</small>
           </div>
         <div v-if="!validName" class="alert alert-warning" role="alert">
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
@@ -19,7 +20,7 @@
       </div>
       <div class="modal-footer border-white">
         <button type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newBlockDef" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button @click="newBlockDef" type="button" class="btn btn-sm btn-primary shadow-sm">Submit</button>
       </div>
     </div>
   </div>
@@ -27,6 +28,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   computed: {
     validName() {
@@ -38,15 +40,20 @@ export default {
   },
   data() {
     return {
+      valid: true,
       name: ''
     }
   },
   methods: {
     checkNameValidity() {
+      this.valid = true
       this.$store.commit('CHECK_NAME', this.name)
     },
     newBlockDef() {
-      if (this.name == "") return false
+      if (this.name == "") {
+        this.valid = false
+        return
+      }
       var items = []
       for (var i = 0; i < this.def.items.length; i++) {
         items.push(this.def.items[i])
@@ -54,6 +61,8 @@ export default {
       this.$store.commit('DUPL_DEF', { name: this.name, items: items, ofClass: this.def.constructor.name })
       this.name = ''
       items = []
+      $("#duplBlockDef .close").click()
+
     },
   }
 }

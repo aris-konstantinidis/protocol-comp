@@ -10,18 +10,17 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Name">
+            <small v-if="!valid" class="small text-danger">Name can not be empty</small>
           </div>
-        </form>
         <div v-if="!validName" class="alert alert-warning" role="alert">
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
         </div>
       </div>
       <div class="modal-footer border-white">
         <button type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newBlockDef" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button @click="newBlockDef" type="button" class="btn btn-sm btn-primary shadow-sm">Submit</button>
       </div>
     </div>
   </div>
@@ -40,17 +39,23 @@ export default {
   },
   data() {
     return {
+      valid: true,
       name: ''
     }
   },
   methods: {
     checkNameValidity() {
+      this.valid = true
       this.$store.commit('CHECK_NAME', this.name)
     },
     newBlockDef() {
-      if (this.name == "") return false
+      if (this.name == "") {
+        this.valid = false
+        return
+      }
         this.$store.commit('NEW_DEF', { name: this.name, ofClass: 'BlockDef'})
         this.name = ''
+        $("#newBlockDefInstForm .close").click()
     },
   }
 }

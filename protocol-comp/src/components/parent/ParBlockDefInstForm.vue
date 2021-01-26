@@ -10,18 +10,17 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <input @input="checkNameValidity" v-model="name" type="text" class="form-control" placeholder="Name">
+            <small v-if="!valid" class="small text-danger">Name can not be empty</small>
           </div>
-        </form>
         <div v-if="!validName" class="alert alert-warning" role="alert">
           Name <span class="badge badge-primary">{{name}}</span> already exists. Please select a unique one.
         </div>
       </div>
       <div class="modal-footer border-white">
         <button type="button" class="btn btn-sm btn-danger shadow-sm" data-dismiss="modal">Cancel</button>
-        <button @click="newParBlockDef" type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Submit</button>
+        <button @click="newParBlockDef" type="button" class="btn btn-sm btn-primary shadow-sm" >Submit</button>
       </div>
     </div>
   </div>
@@ -29,6 +28,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   computed: {
     validName() {
@@ -40,17 +40,24 @@ export default {
   },
   data() {
     return {
+      valid: true,
       name: ''
     }
   },
   methods: {
     checkNameValidity() {
+      this.valid = true
       this.$store.commit('CHECK_NAME', this.name)
     },
     newParBlockDef() {
-        if (this.name == "") return false
+        if (this.name == "") {
+          this.valid = false
+          return false
+        }
         this.$store.commit('NEW_DEF', { name: this.name, ofClass: 'ParBlockDef'})
         this.name = ''
+        $("#newParBlockDefInstForm .close").click()
+
     },
   }
 }

@@ -9,11 +9,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <label v-if="mutatedElement">Block definition <span class="badge badge-primary">{{mutatedElement.name}}</span> is to be deleted. Note that all its instances will be deleted as well, regardless of their position.</label>
           </div>
-        </form>
       </div>
       <div class="modal-footer border-white">
         <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cancel</button>

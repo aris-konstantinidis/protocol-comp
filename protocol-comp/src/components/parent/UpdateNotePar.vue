@@ -9,11 +9,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <form>
           <div class="form-group">
             <label v-if="mutatedElement">A mutation in <span class="badge badge-primary">{{mutatedElement.name}}</span> was detected. Note that all its instances have been mutated as well, regardless of their position.</label>
           </div>
-        </form>
       </div>
       <div class="modal-footer border-white">
         <button type="button" class="btn btn-sm btn-primary shadow-sm" data-dismiss="modal">Okay</button>

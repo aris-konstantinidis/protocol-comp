@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   computed: {
     validName() {
@@ -67,7 +68,7 @@ export default {
         this.$store.commit('ADD_ITEM', { action: "BTP", origin: this.transfer.child, target: this.transfer.parent, item: this.name, index: this.transfer.index})
       }
       this.name = ''
-      $("#blockInstForm .close").click();
+      $("#blockInstForm .close").click()
 
     }
   }
